@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+
+<BorderPane xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mankelfas.controller.AdminController" style="-fx-background-color: #FFFAFA;">
+    <!-- SIDEBAR -->
+    <left>
+        <VBox spacing="15.0" style="-fx-background-color: #E0F7FA; -fx-padding: 20;">
+            <Label text="Menu Admin">
+                <font><Font name="System Bold" size="18.0" /></font>
+            </Label>
+            <Button text="Profil Saya" onAction="#lihatInfoProfil" maxWidth="200" style="-fx-background-color: #009688; -fx-text-fill: white;"/>
+            <Button text="Data Fasilitas" onAction="#bukaFasilitas" maxWidth="200" style="-fx-background-color: #607D8B; -fx-text-fill: white;"/>
+            <Button text="Daftar Akun" onAction="#bukaDaftarAkun" maxWidth="200" style="-fx-background-color: #795548; -fx-text-fill: white;"/>
+            <Button text="Kendala Teknisi" onAction="#bukaKendalaTeknisi" maxWidth="200" style="-fx-background-color: #E91E63; -fx-text-fill: white;"/>
+            <VBox VBox.vgrow="ALWAYS" />
+            <Button text="Logout" onAction="#logout" maxWidth="200" style="-fx-background-color: #f44336; -fx-text-fill: white;" />
+        </VBox>
+    </left>
+    
+    <!-- MAIN CONTENT -->
+    <center>
+        <VBox spacing="15.0" style="-fx-padding: 20;">
+            <Label text="Admin Dashboard - Verifikasi Keluhan">
+                <font><Font name="Montserrat Bold" size="24.0" /></font>
+            </Label>
+            <Label fx:id="lblWelcome" text="Selamat Datang, Admin!">
+                <font><Font name="Montserrat" size="18.0" /></font>
+            </Label>
+
+            <HBox spacing="15.0" VBox.vgrow="ALWAYS">
+                <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="10.0">
+                        <Label text="Daftar Keluhan Masuk">
+                            <font><Font name="System Bold" size="14.0"/></font>
+                        </Label>
+                        <HBox HBox.hgrow="ALWAYS" />
+                        <CheckBox fx:id="checkTampilkanArsip" text="Tampilkan Arsip" onAction="#refreshTabel" />
+                    </HBox>
+                    <TableView fx:id="tabelKeluhan" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colId" text="ID" prefWidth="50" />
+                            <TableColumn fx:id="colPelapor" text="Pelapor" prefWidth="100" />
+                            <TableColumn fx:id="colFasilitas" text="Fasilitas" prefWidth="150" />
+                            <TableColumn fx:id="colDeskripsi" text="Deskripsi" prefWidth="200" />
+                            <TableColumn fx:id="colStatus" text="Status" prefWidth="100" />
+                            <TableColumn fx:id="colTeknisi" text="Teknisi" prefWidth="100" />
+                        </columns>
+                    </TableView>
+                </VBox>
+                
+                <VBox spacing="10.0" minWidth="200">
+                    <Label text="Tindakan Keluhan">
+                        <font><Font name="System Bold" size="14.0"/></font>
+                    </Label>
+                    <ComboBox fx:id="comboTeknisi" promptText="Pilih Teknisi..." minWidth="200"/>
+                    <ComboBox fx:id="comboPrioritas" promptText="Pilih Prioritas..." minWidth="200">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="RENDAH" />
+                                <String fx:value="SEDANG" />
+                                <String fx:value="TINGGI" />
+                                <String fx:value="URGENT" />
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+                    <Button text="Set Prioritas" onAction="#setPrioritas" maxWidth="200" style="-fx-background-color: #00BCD4; -fx-text-fill: white;"/>
+                    <Button text="Assign Teknisi" onAction="#assignTeknisi" maxWidth="200" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+                    <Button text="Arsipkan Keluhan" onAction="#arsipkanKeluhan" maxWidth="200" style="-fx-background-color: #607D8B; -fx-text-fill: white;"/>
+                    <Button text="Batalkan Keluhan" onAction="#batalkanKeluhan" maxWidth="200" style="-fx-background-color: #FF9800; -fx-text-fill: white;"/>
+                    <Button text="Lihat Detail Keluhan" onAction="#lihatDetail" maxWidth="200" style="-fx-background-color: #9C27B0; -fx-text-fill: white;"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>
