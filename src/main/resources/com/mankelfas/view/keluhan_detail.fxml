@@ -25,6 +25,8 @@
        </Label>
        <Label fx:id="lblIdKeluhan" text="ID: " />
        <Label fx:id="lblStatus" text="Status: " />
+       <Label fx:id="lblWaktuDiproses" text="Mulai Diproses: " />
+       <Label fx:id="lblEstimasi" text="Estimasi Waktu: " />
        <Label fx:id="lblDeskripsi" text="Deskripsi: " wrapText="true"/>
    </VBox>
 

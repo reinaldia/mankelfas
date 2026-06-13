@@ -51,7 +51,7 @@ public class LoginController {
                 showAlert(Alert.AlertType.ERROR, "Gagal", "Email atau password salah!");
             }
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Error Sistem", "Terjadi kesalahan internal: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error Sistem", "Terjadi masalah dengan koneksi ke DB");
         }
     }
 

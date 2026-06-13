@@ -13,6 +13,8 @@ public class KeluhanDetailController {
 
     @FXML private Label lblIdKeluhan;
     @FXML private Label lblStatus;
+    @FXML private Label lblWaktuDiproses;
+    @FXML private Label lblEstimasi;
     @FXML private Label lblDeskripsi;
     
     @FXML private Label lblNamaFasilitas;
@@ -27,6 +29,12 @@ public class KeluhanDetailController {
         
         lblIdKeluhan.setText("ID: " + k.getIdKeluhan());
         lblStatus.setText("Status: " + k.getStatus().name());
+        
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        String waktu = (k.getWaktuDiproses() != null) ? k.getWaktuDiproses().format(formatter) : "-";
+        lblWaktuDiproses.setText("Mulai Diproses: " + waktu);
+        
+        lblEstimasi.setText("Estimasi Waktu: " + (k.getEstimasiWaktu() != null ? k.getEstimasiWaktu() : "-"));
         lblDeskripsi.setText("Deskripsi: " + k.getDeskripsi());
         
         Fasilitas f = k.getFasilitas();

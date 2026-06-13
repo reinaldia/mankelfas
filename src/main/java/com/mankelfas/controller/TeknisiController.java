@@ -28,11 +28,10 @@ import javafx.application.Platform;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.time.LocalDateTime;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import com.mankelfas.repository.DatabaseConnection;
+import com.mankelfas.config.DatabaseConnection;
 
 public class TeknisiController {
 

@@ -132,7 +132,7 @@ public class AdminController {
             boolean showArchived = checkTampilkanArsip.isSelected();
             List<Keluhan> all = keluhanService.getAllKeluhan();
             List<Keluhan> filtered = all.stream()
-                .filter(k -> k.isArchived() == showArchived)
+                .filter(k -> showArchived || !k.isArchived())
                 .collect(Collectors.toList());
             keluhanObservableList = FXCollections.observableArrayList(filtered);
             tabelKeluhan.setItems(keluhanObservableList);
