@@ -3,6 +3,12 @@ package com.mankelfas.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import javafx.embed.swing.SwingFXUtils;
+import java.io.File;
 import javafx.stage.Stage;
 import com.mankelfas.model.keluhan.Keluhan;
 import com.mankelfas.model.keluhan.Fasilitas;
@@ -26,7 +32,10 @@ public class KeluhanDetailController {
     @FXML private Label lblKategori;
     @FXML private Label lblKondisi;
     
-    @FXML private TextArea txtAreaRiwayat;
+    @FXML private TextArea txtAreaRiwayatStatus;
+    @FXML private TextArea txtAreaKomentar;
+    @FXML private ImageView imgBukti;
+    @FXML private Label lblNoFoto;
 
     /**
      * Menyuntikkan data objek keluhan ke dalam elemen visual UI rincian.
@@ -60,21 +69,50 @@ public class KeluhanDetailController {
             lblKondisi.setText("Kondisi Terakhir: " + f.getKondisi());
         }
 
-        // Merangkai log jejak rekam (riwayat status dan percakapan) menggunakan StringBuilder untuk efisiensi
-        StringBuilder sb = new StringBuilder();
-        sb.append("--- RIWAYAT STATUS ---\n");
-        // Melakukan perulangan untuk mengekstrak setiap baris riwayat yang terekam
+        StringBuilder sbRiwayat = new StringBuilder();
         for (RiwayatKeluhan r : k.getRiwayat()) {
-            sb.append(r.getInfo()).append("\n");
+            sbRiwayat.append(r.getInfo()).append("\n");
         }
-        sb.append("\n--- KOMENTAR TEKNISI ---\n");
-        // Melakukan perulangan untuk mengekstrak setiap catatan dari teknisi lapangan
-        for (Komentar c : k.getKomentar()) {
-            sb.append(c.getKomentar()).append("\n");
+        txtAreaRiwayatStatus.setText(sbRiwayat.toString());
+
+        StringBuilder sbKomentar = new StringBuilder();
+        if (k.getKomentar() != null && !k.getKomentar().isEmpty()) {
+            for (Komentar c : k.getKomentar()) {
+                sbKomentar.append(c.getKomentar()).append("\n\n");
+            }
+        } else {
+            sbKomentar.append("Belum ada komentar teknisi.");
         }
-        
-        // Menyajikan teks gabungan panjang ke area teks UI
-        txtAreaRiwayat.setText(sb.toString());
+        txtAreaKomentar.setText(sbKomentar.toString());
+
+        if (k.getFotoBukti() != null && !k.getFotoBukti().isEmpty()) {
+            try {
+                File fileFoto = new File(k.getFotoBukti());
+                if (!fileFoto.exists()) {
+                    fileFoto = new File(k.getFotoBukti().replace("file:", ""));
+                }
+                
+                if (fileFoto.exists()) {
+                    BufferedImage bufferedImage = ImageIO.read(fileFoto);
+                    if (bufferedImage != null) {
+                        Image fxImage = SwingFXUtils.toFXImage(bufferedImage, null);
+                        imgBukti.setImage(fxImage);
+                        lblNoFoto.setVisible(false);
+                    } else {
+                        lblNoFoto.setText("Gagal decode foto WebP.");
+                        lblNoFoto.setVisible(true);
+                    }
+                } else {
+                    lblNoFoto.setText("File foto tidak ditemukan.");
+                    lblNoFoto.setVisible(true);
+                }
+            } catch (Exception e) {
+                lblNoFoto.setText("Error memuat foto: " + e.getMessage());
+                lblNoFoto.setVisible(true);
+            }
+        } else {
+            lblNoFoto.setVisible(true);
+        }
     }
 
     /**

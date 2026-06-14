@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
 
 import java.io.IOException;
 
@@ -23,7 +24,9 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         try {
             scene = new Scene(loadFXML("login"), 640, 480);
-            stage.setTitle("Manajemen Keluhan Fasilitas");
+            com.mankelfas.util.ThemeManager.applyTheme(scene);
+            stage.setTitle("MankelFas - Manajemen Keluhan Fasilitas");
+            stage.getIcons().add(new Image(App.class.getResourceAsStream("/com/mankelfas/assets/logo.png")));
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
@@ -41,6 +44,7 @@ public class App extends Application {
     public static void setRoot(String fxml) throws IOException {
         try {
             scene.setRoot(loadFXML(fxml));
+            com.mankelfas.util.ThemeManager.applyTheme(scene);
         } catch (IOException e) {
             System.err.println("Gagal mengganti root ke " + fxml + ": " + e.getMessage());
             throw e;

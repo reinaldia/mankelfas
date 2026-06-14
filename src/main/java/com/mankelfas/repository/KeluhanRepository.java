@@ -90,7 +90,34 @@ public class KeluhanRepository implements IKeluhanRepository {
             throw new RuntimeException("Gagal mengambil data keluhan: " + e.getMessage(), e);
         }
         
+        
+        // Load RiwayatKeluhan
+        String sqlRiwayat = "SELECT * FROM riwayat_keluhan";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sqlRiwayat);
+             ResultSet rsR = stmt.executeQuery()) {
+            while (rsR.next()) {
+                int idK = rsR.getInt("id_keluhan");
+                int idR = rsR.getInt("id_riwayat");
+                String pesan = rsR.getString("pesan");
+                java.util.Date waktu = rsR.getTimestamp("waktu");
+                
+                com.mankelfas.model.keluhan.RiwayatKeluhan rk = new com.mankelfas.model.keluhan.RiwayatKeluhan(idR, pesan, waktu);
+                rk.setSaved(true);
+                
+                for (Keluhan k : list) {
+                    if (k.getIdKeluhan() == idK) {
+                        k.getRiwayat().add(rk);
+                        break;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Gagal load riwayat: " + e.getMessage());
+        }
+        
         return list;
+
     }
 
     /**
@@ -158,7 +185,26 @@ public class KeluhanRepository implements IKeluhanRepository {
             
             stmt.setInt(10, keluhan.getIdKeluhan());
             
-            return stmt.executeUpdate() > 0;
+            
+            boolean updated = stmt.executeUpdate() > 0;
+            if (updated) {
+                // Simpan RiwayatKeluhan yang baru
+                String sqlInsR = "INSERT INTO riwayat_keluhan (id_keluhan, pesan) VALUES (?, ?)";
+                try (PreparedStatement stmtR = conn.prepareStatement(sqlInsR)) {
+                    for (com.mankelfas.model.keluhan.RiwayatKeluhan rk : keluhan.getRiwayat()) {
+                        if (!rk.isSaved()) {
+                            stmtR.setInt(1, keluhan.getIdKeluhan());
+                            stmtR.setString(2, rk.getPesan());
+                            stmtR.executeUpdate();
+                            rk.setSaved(true);
+                        }
+                    }
+                } catch (SQLException e) {
+                    System.err.println("Gagal simpan riwayat: " + e.getMessage());
+                }
+            }
+            return updated;
+
         } catch (SQLException e) {
             throw new RuntimeException("Gagal update data keluhan: " + e.getMessage(), e);
         }
@@ -178,7 +224,9 @@ public class KeluhanRepository implements IKeluhanRepository {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setInt(1, idKeluhan);
+            
             return stmt.executeUpdate() > 0;
+
         } catch (SQLException e) {
             throw new RuntimeException("Gagal menghapus data keluhan: " + e.getMessage(), e);
         }

@@ -9,7 +9,7 @@ public class Fasilitas {
     private String nama;
     private String kategori;
     private String lokasi;
-    private String kondisi;
+    private com.mankelfas.enumeration.KondisiFasilitas kondisi;
 
     /**
      * Membentuk objek entitas fasilitas baru beserta segenap kelengkapannya.
@@ -20,7 +20,7 @@ public class Fasilitas {
      * @param lokasi Tempat spesifik fasilitas tersebut diletakkan
      * @param kondisi Status fungsionalitas dari fasilitas saat ini
      */
-    public Fasilitas(int idFasilitas, String nama, String kategori, String lokasi, String kondisi) {
+    public Fasilitas(int idFasilitas, String nama, String kategori, String lokasi, com.mankelfas.enumeration.KondisiFasilitas kondisi) {
         this.idFasilitas = idFasilitas;
         this.nama = nama;
         this.kategori = kategori;
@@ -42,6 +42,10 @@ public class Fasilitas {
     public String getNama() { return nama; }
     public String getKategori() { return kategori; }
     public String getLokasi() { return lokasi; }
-    public String getKondisi() { return kondisi; }
+    public com.mankelfas.enumeration.KondisiFasilitas getKondisi() { return kondisi; }
     public void setIdFasilitas(int idFasilitas) { this.idFasilitas = idFasilitas; }
+    public void setNama(String nama) { this.nama = nama; }
+    public void setKategori(String kategori) { this.kategori = kategori; }
+    public void setLokasi(String lokasi) { this.lokasi = lokasi; }
+    public void setKondisi(com.mankelfas.enumeration.KondisiFasilitas kondisi) { this.kondisi = kondisi; }
 }

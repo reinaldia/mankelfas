@@ -7,7 +7,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mankelfas.controller.KendalaController" spacing="15.0" style="-fx-padding: 20; -fx-background-color: #FFEBEE;">
+<VBox xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mankelfas.controller.KendalaController" spacing="15.0" styleClass="card">
     <Label text="Daftar Kendala Teknisi">
         <font><Font name="System Bold" size="20.0" /></font>
     </Label>

@@ -18,6 +18,7 @@ import java.io.File;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.util.List;
+import java.util.stream.Collectors;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,10 +33,16 @@ import javafx.stage.Stage;
  * Memfasilitasi pelaporan fasilitas rusak, pengunggahan foto bukti, serta pemantauan status perbaikan secara langsung.
  */
 public class MahasiswaController {
+    @FXML private javafx.scene.layout.BorderPane mainPane;
+    @FXML private javafx.scene.layout.VBox dashboardContent;
 
+
+    @FXML private ComboBox<String> comboLokasi;
     @FXML private ComboBox<String> comboFasilitas;
+    @FXML private ComboBox<com.mankelfas.enumeration.KondisiFasilitas> comboKondisi;
     @FXML private TextArea inputDeskripsi;
     @FXML private ImageView imagePreview;
+    @FXML private javafx.scene.control.Label lblPlaceholder;
     @FXML private TableView<Keluhan> tabelKeluhan;
     @FXML private TableColumn<Keluhan, Integer> colId;
     @FXML private TableColumn<Keluhan, String> colFasilitas;
@@ -55,6 +62,9 @@ public class MahasiswaController {
      */
     @FXML
     public void initialize() {
+        tabelKeluhan.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        com.mankelfas.util.Navigator.registerMainPane(mainPane, dashboardContent);
+
         // Menampilkan pesan sapaan khusus menggunakan nama pengguna aktif
         if (com.mankelfas.util.Session.getCurrentUser() != null) {
             lblWelcome.setText("Selamat Datang, " + com.mankelfas.util.Session.getCurrentUser().getNama() + "!");
@@ -65,10 +75,29 @@ public class MahasiswaController {
             keluhanService = KeluhanService.getInstance();
             fasilitasList = keluhanService.getAllFasilitas();
 
-            // Memasukkan daftar fasilitas yang tersedia ke dalam menu lungsur pilihan pelaporan
+            // Menyusun daftar lokasi unik
+            java.util.List<String> lokasis = fasilitasList.stream().map(Fasilitas::getLokasi).distinct().collect(Collectors.toList());
+            comboLokasi.getItems().addAll(lokasis);
+            
+            // Ketika lokasi dipilih, saring fasilitas
+            comboLokasi.setOnAction(e -> {
+                comboFasilitas.getItems().clear();
+                String loc = comboLokasi.getValue();
+                for (Fasilitas f : fasilitasList) {
+                    if (loc == null || f.getLokasi().equals(loc)) {
+                        comboFasilitas.getItems().add(f.getInfo());
+                    }
+                }
+            });
+
             for (Fasilitas f : fasilitasList) {
                 comboFasilitas.getItems().add(f.getInfo());
             }
+
+            comboKondisi.getItems().addAll(
+                com.mankelfas.enumeration.KondisiFasilitas.RUSAK_RINGAN,
+                com.mankelfas.enumeration.KondisiFasilitas.RUSAK_PARAH
+            );
 
             // Menyambungkan struktur kolom tabel dengan properti kelas Keluhan
             colId.setCellValueFactory(new PropertyValueFactory<>("idKeluhan"));
@@ -101,6 +130,26 @@ public class MahasiswaController {
     /**
      * Membuka jendela dialog pencarian file (File Explorer) agar pengguna dapat menyisipkan foto bukti kerusakan.
      */
+
+    @FXML
+    private void clearLokasi() {
+        comboLokasi.getSelectionModel().clearSelection();
+        comboFasilitas.getItems().clear();
+        for (Fasilitas f : fasilitasList) {
+            comboFasilitas.getItems().add(f.getInfo());
+        }
+    }
+
+    @FXML
+    private void clearFasilitas() {
+        comboFasilitas.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    private void clearKondisi() {
+        comboKondisi.getSelectionModel().clearSelection();
+    }
+
     @FXML
     private void pilihFoto() {
         FileChooser fileChooser = new FileChooser();
@@ -126,14 +175,14 @@ public class MahasiswaController {
      */
     @FXML
     private void kirimKeluhan() {
-        int selectedIndex = comboFasilitas.getSelectionModel().getSelectedIndex();
+        String selectedFasilitasInfo = comboFasilitas.getValue();
+        com.mankelfas.enumeration.KondisiFasilitas selectedKondisi = comboKondisi.getValue();
         String deskripsi = inputDeskripsi.getText();
 
-        // Memvalidasi apakah isian fasilitas dan rincian teks telah diberikan secara benar
-        if (selectedIndex >= 0 && deskripsi != null && !deskripsi.trim().isEmpty()) {
+        if (selectedFasilitasInfo != null && selectedKondisi != null && deskripsi != null && !deskripsi.trim().isEmpty()) {
             try {
-                // Mengekstraksi objek fasilitas terpilih dari daftar internal
-                Fasilitas f = fasilitasList.get(selectedIndex);
+                Fasilitas f = fasilitasList.stream().filter(fas -> fas.getInfo().equals(selectedFasilitasInfo)).findFirst().orElse(null);
+                if (f == null) throw new RuntimeException("Fasilitas tidak valid");
                 
                 // Menentukan keabsahan sesi pengguna aktif
                 com.mankelfas.model.user.User currentUser = com.mankelfas.util.Session.getCurrentUser();
@@ -164,6 +213,11 @@ public class MahasiswaController {
                 
                 // Menyusun objek keluhan baru dan menitipkannya ke lapisan layanan untuk dicatat ke database
                 Keluhan k = new Keluhan(0, deskripsi, webpFilePath, mhs, f);
+                
+                // Update kondisi fasilitas di database
+                f.setKondisi(selectedKondisi);
+                keluhanService.updateFasilitas(f);
+                
                 keluhanService.addKeluhan(k);
                 
                 // Memasukkan tambahan data ke tabel tanpa memuat ulang layar
@@ -173,8 +227,10 @@ public class MahasiswaController {
                 // Membersihkan UI form setelah pengiriman berhasil
                 inputDeskripsi.clear();
                 comboFasilitas.getSelectionModel().clearSelection();
+                comboKondisi.getSelectionModel().clearSelection();
                 selectedFile = null;
                 imagePreview.setImage(null);
+                if (lblPlaceholder != null) lblPlaceholder.setVisible(true);
 
                 // Mengabarkan pesan keberhasilan kepada pelapor
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -188,7 +244,7 @@ public class MahasiswaController {
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("Pilih fasilitas dan isi deskripsi!");
+            alert.setContentText("Pilih fasilitas, kondisi, dan isi deskripsi!");
             alert.show();
         }
     }
@@ -230,21 +286,42 @@ public class MahasiswaController {
     }
 
     /**
-     * Menampilkan kotak informasi yang memuat ringkasan identitas dan peran akun mahasiswa.
+     * Memuat dan menampilkan antarmuka khusus Profil Pengguna.
      */
     @FXML
     private void lihatInfoProfil() {
-        // Melakukan verifikasi untuk menjamin kelas data yang aktif sesuai dengan harapan
-        if (com.mankelfas.util.Session.getCurrentUser() instanceof com.mankelfas.model.user.Mahasiswa) {
-            com.mankelfas.model.user.Mahasiswa mhs = (com.mankelfas.model.user.Mahasiswa) com.mankelfas.util.Session.getCurrentUser();
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/com/mankelfas/view/profil_view.fxml"));
+            javafx.scene.Parent root = loader.load();
             
-            // Merangkai parameter pengguna menjadi susunan teks vertikal
-            String info = "ID/NIM: " + mhs.getIdUser() + "\nNama: " + mhs.getNama() + 
-                          "\nEmail: " + mhs.getEmail() + "\nRole: " + mhs.getRole() + 
-                          "\nNIM: " + mhs.getNim();
-            com.mankelfas.util.DialogHelper.showInfoDialog("Profil Mahasiswa", "Informasi Akun", info);
+            ProfilController controller = loader.getController();
+            controller.setUserData(com.mankelfas.util.Session.getCurrentUser());
+            
+            com.mankelfas.util.Navigator.navigate(root);
+        } catch (Exception e) {
+            com.mankelfas.util.DialogHelper.showErrorDialog("Error", "Gagal memuat UI profil: " + e.getMessage());
         }
     }
+
+    /**
+     * Membalikkan warna tema aplikasi antara Terang dan Gelap.
+     */
+    @FXML
+    private void toggleMode(javafx.event.ActionEvent event) {
+        com.mankelfas.util.ThemeManager.toggleTheme();
+        
+        // Memuat ulang tema pada jendela (Scene) yang sedang aktif
+        javafx.scene.control.Button btn = (javafx.scene.control.Button) event.getSource();
+        com.mankelfas.util.ThemeManager.applyTheme(btn.getScene());
+        
+        // Memperbarui ikon matahari/bulan pada tombol
+        if (com.mankelfas.util.ThemeManager.isDarkMode()) {
+            btn.setText("☽");
+        } else {
+            btn.setText("☼");
+        }
+    }
+
 
     /**
      * Menyediakan sarana bagi mahasiswa untuk melihat pratinjau daftar fasilitas secara umum.
@@ -255,11 +332,7 @@ public class MahasiswaController {
             // Memanggil UI terpisah yang berfungsi khusus menampilkan direktori fasilitas
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mankelfas/view/fasilitas_view.fxml"));
             Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Data Fasilitas");
-            stage.setScene(new Scene(root));
-            stage.showAndWait();
+            com.mankelfas.util.Navigator.navigate(root);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("Gagal memuat fasilitas view: " + e.getMessage());
@@ -270,6 +343,11 @@ public class MahasiswaController {
     /**
      * Melakukan pelepasan sesi aktif saat ini dan mengembalikan layar pada halaman pendaftaran masuk.
      */
+    @FXML
+    private void kembaliKeBeranda() {
+        com.mankelfas.util.Navigator.goHome();
+    }
+
     @FXML
     private void logout() {
         try {

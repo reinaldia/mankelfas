@@ -28,12 +28,16 @@ import java.util.stream.Collectors;
  * Memproses instruksi mulai dari manajemen akun pengguna hingga memantau keseluruhan rekapitulasi keluhan fasilitas.
  */
 public class AdminController {
+    @FXML private javafx.scene.layout.BorderPane mainPane;
+    @FXML private javafx.scene.layout.VBox dashboardContent;
+
 
     @FXML private TableView<Keluhan> tabelKeluhan;
     @FXML private TableColumn<Keluhan, Integer> colId;
     @FXML private TableColumn<Keluhan, String> colPelapor;
     @FXML private TableColumn<Keluhan, String> colFasilitas;
     @FXML private TableColumn<Keluhan, String> colDeskripsi;
+    @FXML private TableColumn<Keluhan, String> colPrioritas;
     @FXML private TableColumn<Keluhan, String> colStatus;
     @FXML private TableColumn<Keluhan, String> colTeknisi;
     
@@ -41,6 +45,9 @@ public class AdminController {
     @FXML private ComboBox<String> comboPrioritas;
     @FXML private javafx.scene.control.CheckBox checkTampilkanArsip;
     @FXML private Label lblWelcome;
+    @FXML private Label lblTotalAktif;
+    @FXML private Label lblMenunggu;
+    @FXML private Label lblDitangani;
 
     private KeluhanService keluhanService;
     private UserService userService;
@@ -54,6 +61,9 @@ public class AdminController {
      */
     @FXML
     public void initialize() {
+        tabelKeluhan.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        com.mankelfas.util.Navigator.registerMainPane(mainPane, dashboardContent);
+
         // Menampilkan pesan sambutan dengan nama pengguna yang sedang masuk log
         if (com.mankelfas.util.Session.getCurrentUser() != null) {
             lblWelcome.setText("Selamat Datang, " + com.mankelfas.util.Session.getCurrentUser().getNama() + "!");
@@ -78,7 +88,30 @@ public class AdminController {
             // Menghubungkan setiap kolom tabel dengan atribut bawaan dari entitas Keluhan
             colId.setCellValueFactory(new PropertyValueFactory<>("idKeluhan"));
             colDeskripsi.setCellValueFactory(new PropertyValueFactory<>("deskripsi"));
-            colStatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus().name()));
+            colStatus.setCellValueFactory(cellData -> {
+                com.mankelfas.model.keluhan.Keluhan k = cellData.getValue();
+                String st = k.getStatus().name();
+                return new javafx.beans.property.SimpleStringProperty(k.isArchived() ? st + " (ARSIP)" : st);
+            });
+
+            colPrioritas.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getPrioritas().name()));
+            colPrioritas.setCellFactory(column -> new javafx.scene.control.TableCell<Keluhan, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        javafx.scene.control.Label chip = new javafx.scene.control.Label(item);
+                        chip.getStyleClass().add("chip");
+                        chip.getStyleClass().add("chip-" + item.toLowerCase());
+                        setGraphic(chip);
+                        setAlignment(javafx.geometry.Pos.CENTER);
+                    }
+                }
+            });
+
             
             // Menangani pengikatan data kolom Pelapor dengan memastikan objek tidak bernilai null
             colPelapor.setCellValueFactory(cellData -> {
@@ -124,23 +157,31 @@ public class AdminController {
 
         // Memastikan pengguna telah memilih keluhan dan teknisi sebelum melanjutkan
         if (selectedKeluhan != null && selectedTeknisiIndex >= 0) {
+            if (selectedKeluhan.getStatus() == com.mankelfas.enumeration.StatusKeluhan.DITOLAK) {
+                com.mankelfas.util.DialogHelper.showErrorDialog("Aksi Ditolak", "Keluhan yang sudah ditolak tidak dapat di-assign teknisi.");
+                return;
+            }
             try {
-                // Menyematkan teknisi ke dalam objek keluhan
+                // Menyematkan teknisi ke dalam objek keluhan dengan mencatat riwayatnya
                 Teknisi t = teknisiList.get(selectedTeknisiIndex);
-                selectedKeluhan.setTeknisi(t);
+                boolean isReplacement = (selectedKeluhan.getTeknisi() != null);
+                selectedKeluhan.updateTeknisi(t);
                 
                 // Memperbarui status keluhan secara otomatis jika baru pertama kali diproses
                 if (selectedKeluhan.getStatus() == StatusKeluhan.DILAPORKAN) {
-                    selectedKeluhan.setStatus(StatusKeluhan.DIPROSES);
+                    selectedKeluhan.updateStatus(StatusKeluhan.DITUGASKAN);
+                    com.mankelfas.enumeration.KondisiFasilitas k = selectedKeluhan.getFasilitas().getKondisi();
+                    selectedKeluhan.updateKondisiFasilitas(k.toSedangDiperiksa());
+                    keluhanService.updateFasilitas(selectedKeluhan.getFasilitas());
                 }
 
                 // Menyimpan pembaruan ke dalam database dan menyegarkan tampilan tabel
                 keluhanService.updateKeluhan(selectedKeluhan);
-                tabelKeluhan.refresh();
+                refreshTabel();
                 
                 // Memberikan informasi keberhasilan kepada pengguna
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Teknisi berhasil di-assign!");
+                alert.setContentText(isReplacement ? "Teknisi berhasil diganti!" : "Teknisi berhasil di-assign!");
                 alert.show();
             } catch (Exception e) {
                 // Menangani kegagalan saat proses penyimpanan
@@ -166,8 +207,24 @@ public class AdminController {
             // Mengecek apakah kotak centang untuk menampilkan arsip sedang aktif
             boolean showArchived = checkTampilkanArsip.isSelected();
             List<Keluhan> all = keluhanService.getAllKeluhan();
+
+            // Hitung statistik mengabaikan arsip, DITOLAK, dan SELESAI
+            java.util.function.Predicate<Keluhan> isActive = k -> 
+                !k.isArchived() && 
+                k.getStatus() != StatusKeluhan.DITOLAK && 
+                k.getStatus() != StatusKeluhan.SELESAI;
+
+            long totalAktif = all.stream().filter(isActive).count();
+            long menunggu = all.stream().filter(k -> isActive.test(k) && k.getTeknisi() == null).count();
+            long ditangani = all.stream().filter(k -> isActive.test(k) && k.getTeknisi() != null).count();
+            
+            if(lblTotalAktif != null) lblTotalAktif.setText(String.valueOf(totalAktif));
+            if(lblMenunggu != null) lblMenunggu.setText(String.valueOf(menunggu));
+            if(lblDitangani != null) lblDitangani.setText(String.valueOf(ditangani));
+
             
             // Menyaring daftar keluhan sesuai kriteria penampilan arsip
+            // Keluhan tetap tampil di tabel meskipun DITOLAK/SELESAI asalkan belum diarsipkan
             List<Keluhan> filtered = all.stream()
                 .filter(k -> showArchived || !k.isArchived())
                 .collect(Collectors.toList());
@@ -185,12 +242,46 @@ public class AdminController {
     /**
      * Mengarsipkan keluhan yang telah selesai agar tidak menumpuk di tampilan utama.
      */
+    /**
+     * Mengembalikan keluhan yang telah diarsipkan ke daftar aktif.
+     */
+    @FXML
+    private void batalArsip() {
+        Keluhan selectedKeluhan = tabelKeluhan.getSelectionModel().getSelectedItem();
+        
+        if (selectedKeluhan != null) {
+            if (!selectedKeluhan.isArchived()) {
+                com.mankelfas.util.DialogHelper.showErrorDialog("Status Tidak Valid", "Keluhan ini tidak sedang diarsipkan.");
+                return;
+            }
+            try {
+                selectedKeluhan.batalArsip();
+                keluhanService.updateKeluhan(selectedKeluhan);
+                
+                refreshTabel();
+                com.mankelfas.util.DialogHelper.showInfoDialog("Sukses", "Pulihkan Arsip", "Keluhan telah dikembalikan dari arsip.");
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Gagal memulihkan arsip: " + e.getMessage());
+                alert.show();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("Pilih keluhan terlebih dahulu!");
+            alert.show();
+        }
+    }
+
     @FXML
     private void arsipkanKeluhan() {
         Keluhan selectedKeluhan = tabelKeluhan.getSelectionModel().getSelectedItem();
         
         // Memastikan terdapat keluhan yang dipilih sebelum proses pengarsipan
         if (selectedKeluhan != null) {
+            if (selectedKeluhan.getStatus() != com.mankelfas.enumeration.StatusKeluhan.SELESAI && selectedKeluhan.getStatus() != com.mankelfas.enumeration.StatusKeluhan.DITOLAK) {
+                com.mankelfas.util.DialogHelper.showErrorDialog("Status Tidak Valid", "Hanya keluhan dengan status SELESAI atau DITOLAK yang dapat diarsipkan.");
+                return;
+            }
             try {
                 // Mengubah status keluhan menjadi diarsipkan dan menyimpannya ke database
                 selectedKeluhan.arsipkan();
@@ -223,11 +314,15 @@ public class AdminController {
         
         // Memastikan keluhan serta nilai prioritas telah dipilih secara valid
         if (selectedKeluhan != null && prioStr != null) {
+            if (selectedKeluhan.getStatus() == com.mankelfas.enumeration.StatusKeluhan.DITOLAK) {
+                com.mankelfas.util.DialogHelper.showErrorDialog("Aksi Ditolak", "Keluhan yang sudah ditolak tidak dapat diubah prioritasnya.");
+                return;
+            }
             try {
                 // Mengonversi teks menjadi enumerasi prioritas dan memperbarui datanya
-                selectedKeluhan.setPrioritas(com.mankelfas.enumeration.Prioritas.valueOf(prioStr));
+                selectedKeluhan.updatePrioritas(com.mankelfas.enumeration.Prioritas.valueOf(prioStr));
                 keluhanService.updateKeluhan(selectedKeluhan);
-                tabelKeluhan.refresh();
+                refreshTabel();
                 
                 com.mankelfas.util.DialogHelper.showInfoDialog("Sukses", "Prioritas Disetel", "Prioritas keluhan diubah menjadi " + prioStr);
             } catch (Exception e) {
@@ -253,20 +348,24 @@ public class AdminController {
         
         // Melakukan pengecekan validitas pilihan keluhan
         if (selectedKeluhan != null) {
+            if (selectedKeluhan.getStatus() != com.mankelfas.enumeration.StatusKeluhan.DILAPORKAN) {
+                com.mankelfas.util.DialogHelper.showErrorDialog("Status Tidak Valid", "Hanya keluhan dengan status DILAPORKAN yang dapat ditolak.");
+                return;
+            }
             try {
                 // Mengganti status keluhan dan menyimpannya secara permanen
-                selectedKeluhan.setStatus(StatusKeluhan.DIBATALKAN);
+                selectedKeluhan.updateStatus(StatusKeluhan.DITOLAK);
                 keluhanService.updateKeluhan(selectedKeluhan);
-                tabelKeluhan.refresh();
+                refreshTabel();
                 
                 // Menampilkan notifikasi sukses kepada Admin
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Keluhan telah dibatalkan.");
+                alert.setContentText("Keluhan telah ditolak.");
                 alert.show();
             } catch (Exception e) {
                 // Menampilkan notifikasi kegagalan apabila terjadi rintangan teknis
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText("Gagal membatalkan keluhan: " + e.getMessage());
+                alert.setContentText("Gagal menolak keluhan: " + e.getMessage());
                 alert.show();
             }
         } else {
@@ -314,21 +413,42 @@ public class AdminController {
     }
 
     /**
-     * Menampilkan informasi mendetail dari akun administrator yang sedang aktif.
+     * Memuat dan menampilkan antarmuka khusus Profil Pengguna.
      */
     @FXML
     private void lihatInfoProfil() {
-        // Melakukan validasi keamanan untuk memastikan peran pengguna adalah Admin
-        if (com.mankelfas.util.Session.getCurrentUser() instanceof com.mankelfas.model.user.Admin) {
-            com.mankelfas.model.user.Admin admin = (com.mankelfas.model.user.Admin) com.mankelfas.util.Session.getCurrentUser();
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/com/mankelfas/view/profil_view.fxml"));
+            javafx.scene.Parent root = loader.load();
             
-            // Merangkai informasi identitas akun menjadi satu teks utuh
-            String info = "ID: " + admin.getIdUser() + "\nNama: " + admin.getNama() + 
-                          "\nEmail: " + admin.getEmail() + "\nRole: " + admin.getRole() + 
-                          "\nLevel: " + admin.getLevel();
-            com.mankelfas.util.DialogHelper.showInfoDialog("Profil Admin", "Informasi Akun", info);
+            ProfilController controller = loader.getController();
+            controller.setUserData(com.mankelfas.util.Session.getCurrentUser());
+            
+            com.mankelfas.util.Navigator.navigate(root);
+        } catch (Exception e) {
+            com.mankelfas.util.DialogHelper.showErrorDialog("Error", "Gagal memuat UI profil: " + e.getMessage());
         }
     }
+
+    /**
+     * Membalikkan warna tema aplikasi antara Terang dan Gelap.
+     */
+    @FXML
+    private void toggleMode(javafx.event.ActionEvent event) {
+        com.mankelfas.util.ThemeManager.toggleTheme();
+        
+        // Memuat ulang tema pada jendela (Scene) yang sedang aktif
+        javafx.scene.control.Button btn = (javafx.scene.control.Button) event.getSource();
+        com.mankelfas.util.ThemeManager.applyTheme(btn.getScene());
+        
+        // Memperbarui ikon matahari/bulan pada tombol
+        if (com.mankelfas.util.ThemeManager.isDarkMode()) {
+            btn.setText("☽");
+        } else {
+            btn.setText("☼");
+        }
+    }
+
 
     /**
      * Membuka modul manajemen daftar fasilitas ke dalam jendela baru.
@@ -339,11 +459,7 @@ public class AdminController {
             // Memuat dan mengonfigurasi tampilan manajemen fasilitas
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mankelfas/view/fasilitas_view.fxml"));
             Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Data Fasilitas");
-            stage.setScene(new Scene(root));
-            stage.showAndWait();
+            com.mankelfas.util.Navigator.navigate(root);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("Gagal membuka window fasilitas: " + e.getMessage());
@@ -360,11 +476,7 @@ public class AdminController {
             // Memuat UI pengelola akun pengguna
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mankelfas/view/akun_view.fxml"));
             Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Daftar Akun Pengguna");
-            stage.setScene(new Scene(root));
-            stage.showAndWait();
+            com.mankelfas.util.Navigator.navigate(root);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("Gagal membuka daftar akun: " + e.getMessage());
@@ -381,11 +493,7 @@ public class AdminController {
             // Menyiapkan jendela pemantauan catatan hambatan teknisi
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mankelfas/view/kendala_view.fxml"));
             Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Daftar Kendala Teknisi");
-            stage.setScene(new Scene(root));
-            stage.showAndWait();
+            com.mankelfas.util.Navigator.navigate(root);
         } catch (Exception e) {
             // Mencatat jejak kesalahan apabila UI gagal dimuat
             e.printStackTrace();
@@ -395,6 +503,11 @@ public class AdminController {
     /**
      * Mengeluarkan pengguna dari sesi aktif saat ini dan mengembalikannya ke layar masuk.
      */
+    @FXML
+    private void kembaliKeBeranda() {
+        com.mankelfas.util.Navigator.goHome();
+    }
+
     @FXML
     private void logout() {
         try {

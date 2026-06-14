@@ -48,6 +48,7 @@ public class FasilitasController {
      */
     @FXML
     public void initialize() {
+        tabelFasilitas.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         // Menyiapkan konfigurasi kolom tabel
         colId.setCellValueFactory(new PropertyValueFactory<>("idFasilitas"));
         colNama.setCellValueFactory(new PropertyValueFactory<>("nama"));
@@ -174,13 +175,94 @@ public class FasilitasController {
         }
     }
 
-    /**
-     * Menutup jendela manajemen fasilitas ini secara aman.
-     */
     @FXML
-    private void tutupWindow() {
-        // Mengidentifikasi wadah tampilan aktif dan menutup prosesnya
-        Stage stage = (Stage) tabelFasilitas.getScene().getWindow();
-        stage.close();
+    private void editFasilitas() {
+        Fasilitas selected = tabelFasilitas.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            DialogHelper.showErrorDialog("Peringatan", "Pilih fasilitas yang akan diedit dari tabel.");
+            return;
+        }
+
+        javafx.scene.control.Dialog<Fasilitas> dialog = new javafx.scene.control.Dialog<>();
+        dialog.setTitle("Edit Fasilitas");
+        dialog.setHeaderText("Ubah Data Fasilitas");
+
+        javafx.scene.control.ButtonType simpanButtonType = new javafx.scene.control.ButtonType("Simpan", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(simpanButtonType, javafx.scene.control.ButtonType.CANCEL);
+
+        javafx.scene.layout.GridPane grid = new javafx.scene.layout.GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new javafx.geometry.Insets(20, 150, 10, 10));
+
+        TextField inputNama = new TextField(selected.getNama());
+        ComboBox<String> comboKategori = new ComboBox<>(FXCollections.observableArrayList("Elektronik", "Furnitur", "Bangunan", "Lainnya"));
+        comboKategori.setValue(selected.getKategori());
+        TextField inputLokasi = new TextField(selected.getLokasi());
+        ComboBox<com.mankelfas.enumeration.KondisiFasilitas> comboKondisi = new ComboBox<>(FXCollections.observableArrayList(
+            com.mankelfas.enumeration.KondisiFasilitas.BERFUNGSI_BAIK,
+            com.mankelfas.enumeration.KondisiFasilitas.RUSAK_RINGAN,
+            com.mankelfas.enumeration.KondisiFasilitas.RUSAK_PARAH
+        ));
+        comboKondisi.setValue(selected.getKondisi());
+
+        grid.add(new javafx.scene.control.Label("Nama:"), 0, 0);
+        grid.add(inputNama, 1, 0);
+        grid.add(new javafx.scene.control.Label("Kategori:"), 0, 1);
+        grid.add(comboKategori, 1, 1);
+        grid.add(new javafx.scene.control.Label("Lokasi:"), 0, 2);
+        grid.add(inputLokasi, 1, 2);
+        grid.add(new javafx.scene.control.Label("Kondisi:"), 0, 3);
+        grid.add(comboKondisi, 1, 3);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == simpanButtonType) {
+                selected.setNama(inputNama.getText());
+                selected.setKategori(comboKategori.getValue());
+                selected.setLokasi(inputLokasi.getText());
+                selected.setKondisi(comboKondisi.getValue());
+                return selected;
+            }
+            return null;
+        });
+
+        java.util.Optional<Fasilitas> result = dialog.showAndWait();
+        result.ifPresent(fas -> {
+            try {
+                KeluhanService.getInstance().updateFasilitas(fas);
+                tabelFasilitas.refresh();
+                DialogHelper.showInfoDialog("Sukses", "Fasilitas Diperbarui", "Data fasilitas berhasil disimpan.");
+            } catch (Exception e) {
+                DialogHelper.showErrorDialog("Gagal", "Gagal memperbarui fasilitas: " + e.getMessage());
+            }
+        });
+    }
+
+    @FXML
+    private void hapusFasilitas() {
+        Fasilitas selected = tabelFasilitas.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            DialogHelper.showErrorDialog("Peringatan", "Pilih fasilitas yang akan dihapus dari tabel.");
+            return;
+        }
+
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Hapus Fasilitas");
+        alert.setHeaderText("Konfirmasi Penghapusan");
+        alert.setContentText("Apakah Anda yakin ingin menghapus fasilitas '" + selected.getNama() + "'?");
+
+        java.util.Optional<javafx.scene.control.ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
+            try {
+                KeluhanService.getInstance().deleteFasilitas(selected.getIdFasilitas());
+                fasilitasList.remove(selected);
+                tabelFasilitas.refresh();
+                DialogHelper.showInfoDialog("Sukses", "Fasilitas Dihapus", "Fasilitas telah berhasil dihapus.");
+            } catch (Exception e) {
+                DialogHelper.showErrorDialog("Gagal", "Gagal menghapus fasilitas: " + e.getMessage());
+            }
+        }
     }
 }

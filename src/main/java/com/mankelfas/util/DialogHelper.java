@@ -35,4 +35,18 @@ public class DialogHelper {
         alert.getDialogPane().setContent(expContent);
         alert.showAndWait();
     }
+
+    /**
+     * Menampilkan kotak pesan kesalahan.
+     * 
+     * @param title Judul utama pada jendela pesan
+     * @param content Penjelasan pesan kesalahan
+     */
+    public static void showErrorDialog(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 }

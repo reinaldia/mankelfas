@@ -34,7 +34,7 @@ public class FasilitasRepository implements IFasilitasRepository {
                     rs.getString("nama"),
                     rs.getString("kategori"),
                     rs.getString("lokasi"),
-                    rs.getString("kondisi")
+                    com.mankelfas.enumeration.KondisiFasilitas.valueOf(rs.getString("kondisi"))
                 );
                 fasilitasList.add(f);
             }
@@ -62,7 +62,7 @@ public class FasilitasRepository implements IFasilitasRepository {
             stmt.setString(1, fasilitas.getNama());
             stmt.setString(2, fasilitas.getKategori());
             stmt.setString(3, fasilitas.getLokasi());
-            stmt.setString(4, fasilitas.getKondisi());
+            stmt.setString(4, fasilitas.getKondisi().name());
             
             int affectedRows = stmt.executeUpdate();
             if (affectedRows > 0) {
@@ -95,7 +95,7 @@ public class FasilitasRepository implements IFasilitasRepository {
             stmt.setString(1, fasilitas.getNama());
             stmt.setString(2, fasilitas.getKategori());
             stmt.setString(3, fasilitas.getLokasi());
-            stmt.setString(4, fasilitas.getKondisi());
+            stmt.setString(4, fasilitas.getKondisi().name());
             stmt.setInt(5, fasilitas.getIdFasilitas());
             
             return stmt.executeUpdate() > 0;

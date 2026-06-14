@@ -43,6 +43,7 @@ public class AkunController {
      */
     @FXML
     public void initialize() {
+        tabelAkun.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         // Mendapatkan instansi layanan pengguna tunggal
         userService = UserService.getInstance();
 
@@ -189,7 +190,6 @@ public class AkunController {
     @FXML
     private void tutupWindow() {
         // Melacak konteks UI yang sedang beroperasi dan menginstruksikan terminasi
-        Stage stage = (Stage) tabelAkun.getScene().getWindow();
-        stage.close();
+        com.mankelfas.util.Navigator.goHome();
     }
 }

@@ -8,18 +8,22 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mankelfas.controller.LoginController" style="-fx-background-color: #CCFFCC;">
+<VBox alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mankelfas.controller.LoginController">
    <children>
-      <Label text="Manajemen Keluhan Fasilitas">
-         <font>
-            <Font name="Montserrat Bold" size="18.0" />
-         </font>
-      </Label>
-      <TextField fx:id="inputEmail" promptText="Email" maxWidth="200" />
-      <PasswordField fx:id="inputPassword" promptText="Password" maxWidth="200" />
-      <Button fx:id="btnLogin" onAction="#btnLoginActionPerformed" text="Login" />
+      <VBox alignment="CENTER" spacing="20.0" styleClass="card" maxWidth="450">
+         <padding>
+            <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+         </padding>
+         
+         <Label text="🏢" style="-fx-font-size: 64px;" />
+         <Label text="ManKelFas" styleClass="title-label" style="-fx-font-size: 32px;"/>
+         <Label text="Sistem Manajemen &amp; Pelaporan Keluhan Fasilitas" styleClass="subtitle-label" style="-fx-text-fill: #888888; -fx-font-size: 14px;" wrapText="true" textAlignment="CENTER" />
+         
+         <VBox spacing="15.0" style="-fx-padding: 20 0 0 0;">
+             <TextField fx:id="inputEmail" promptText="Alamat Email" styleClass="text-field" prefHeight="40" />
+             <PasswordField fx:id="inputPassword" promptText="Kata Sandi" styleClass="password-field" prefHeight="40" />
+             <Button fx:id="btnLogin" onAction="#btnLoginActionPerformed" text="Masuk ke Sistem" styleClass="btn, btn-primary" prefWidth="450" prefHeight="40" style="-fx-font-size: 16px;"/>
+         </VBox>
+      </VBox>
    </children>
-   <padding>
-      <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
-   </padding>
 </VBox>

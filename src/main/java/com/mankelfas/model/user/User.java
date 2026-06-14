@@ -68,4 +68,7 @@ public abstract class User {
     public String getEmail() { return email; }
     public String getPassword() { return password; }
     public void setIdUser(int idUser) { this.idUser = idUser; }
+    public void setNama(String nama) { this.nama = nama; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPassword(String password) { this.password = password; }
 }

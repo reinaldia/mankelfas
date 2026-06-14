@@ -1,0 +1,125 @@
+/* Dark Theme Color Palette */
+
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #0F0C29, #302B63, #24243E);
+    -fx-text-fill: #EAEAEA;
+}
+
+.label {
+    -fx-text-fill: #EAEAEA;
+}
+
+/* Sidebar */
+.sidebar {
+    -fx-background-color: #1E1E2E;
+    -fx-border-width: 0 1 0 0;
+    -fx-border-color: #2A2A3E;
+}
+
+/* Sidebar Buttons */
+.sidebar .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #A0A0B0;
+}
+.sidebar .button:hover {
+    -fx-background-color: #2A2A3E;
+    -fx-text-fill: #FFFFFF;
+}
+
+/* Content Area */
+.card {
+    -fx-background-color: #1E1E2E;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 4);
+}
+
+/* Inputs */
+.text-field, .password-field, .combo-box, .text-area {
+    -fx-background-color: #2A2A3E;
+    -fx-border-color: #3A3A4E;
+    -fx-text-fill: #EAEAEA;
+}
+.text-field:focused, .password-field:focused, .text-area:focused {
+    -fx-border-color: #00BCD4;
+}
+
+/* Theme Toggle Button */
+.btn-toggle-theme {
+    -fx-background-color: #4A4A6A;
+    -fx-text-fill: #FFFFFF;
+}
+.btn-toggle-theme:hover {
+    -fx-background-color: #5A5A7A;
+}
+
+/* Action Buttons (Adjusted for dark mode visibility) */
+.btn-primary {
+    -fx-background-color: #E53935;
+    -fx-text-fill: white;
+}
+.btn-primary:hover {
+    -fx-background-color: #B71C1C;
+}
+
+.btn-secondary {
+    -fx-background-color: #4A4A6A;
+    -fx-text-fill: #ffffff;
+}
+.btn-secondary:hover { -fx-background-color: #5A5A7A; }
+
+.btn-success {
+    -fx-background-color: #2E8B57;
+    -fx-text-fill: #ffffff;
+}
+.btn-success:hover { -fx-background-color: #3CB371; }
+
+.btn-danger {
+    -fx-background-color: #D32F2F;
+    -fx-text-fill: #ffffff;
+}
+.btn-danger:hover { -fx-background-color: #F44336; }
+
+.btn-warning {
+    -fx-background-color: #F57F17;
+    -fx-text-fill: #ffffff;
+}
+.btn-warning:hover { -fx-background-color: #FBC02D; }
+
+.btn-info {
+    -fx-background-color: #0097A7;
+    -fx-text-fill: #ffffff;
+}
+.btn-info:hover { -fx-background-color: #00BCD4; }
+
+/* Table View */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #2A2A3E;
+}
+.table-view .column-header-background {
+    -fx-background-color: #1E1E2E;
+}
+.table-view .column-header {
+    -fx-background-color: transparent;
+}
+.table-view .table-cell {
+    -fx-text-fill: #EAEAEA;
+}
+.table-row-cell:odd {
+    -fx-background-color: linear-gradient(to bottom right, #0F0C29, #302B63, #24243E);
+}
+.table-row-cell:even {
+    -fx-background-color: #1E1E2E;
+}
+.table-row-cell:selected {
+    -fx-background-color: #4A5EE5;
+}
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: #FFFFFF;
+}
+
+.check-box, .check-box .text { -fx-text-fill: #EAEAEA !important; }
+
+.combo-box-popup .list-cell { -fx-text-fill: #EAEAEA !important; -fx-background-color: #2A2A3E; }
+.combo-box-popup .list-cell:hover { -fx-background-color: #4A5EE5; }
+
+.combo-box .list-cell, .combo-box .text { -fx-text-fill: #EAEAEA !important; }

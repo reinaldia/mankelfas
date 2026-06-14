@@ -17,7 +17,7 @@ public class TambahFasilitasController {
     @FXML private TextField inputNama;
     @FXML private ComboBox<String> comboKategori;
     @FXML private TextField inputLokasi;
-    @FXML private ComboBox<String> comboKondisi;
+    @FXML private ComboBox<com.mankelfas.enumeration.KondisiFasilitas> comboKondisi;
 
     private FasilitasController parentController;
 
@@ -28,7 +28,11 @@ public class TambahFasilitasController {
     public void initialize() {
         // Mengisi menu pilihan dengan nilai-nilai baku
         comboKategori.getItems().addAll("Elektronik", "Furnitur", "Bangunan", "Lainnya");
-        comboKondisi.getItems().addAll("Baik", "Rusak Ringan", "Rusak Berat", "Mati Total");
+        comboKondisi.getItems().addAll(
+            com.mankelfas.enumeration.KondisiFasilitas.BERFUNGSI_BAIK,
+            com.mankelfas.enumeration.KondisiFasilitas.RUSAK_RINGAN,
+            com.mankelfas.enumeration.KondisiFasilitas.RUSAK_PARAH
+        );
     }
 
     /**
@@ -49,7 +53,7 @@ public class TambahFasilitasController {
         String nama = inputNama.getText();
         String kategori = comboKategori.getValue();
         String lokasi = inputLokasi.getText();
-        String kondisi = comboKondisi.getValue();
+        com.mankelfas.enumeration.KondisiFasilitas kondisi = comboKondisi.getValue();
 
         // Mencegah proses penyimpanan jika terdapat data wajib yang belum terisi
         if (nama == null || nama.trim().isEmpty() ||

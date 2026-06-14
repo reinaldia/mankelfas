@@ -30,6 +30,7 @@ public class KendalaController {
      */
     @FXML
     public void initialize() {
+        tabelKendala.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         // Menghubungkan setiap elemen kolom dengan variabel pembawa data masing-masing
         colIdKeluhan.setCellValueFactory(new PropertyValueFactory<>("idKeluhan"));
         colTeknisi.setCellValueFactory(new PropertyValueFactory<>("namaTeknisi"));

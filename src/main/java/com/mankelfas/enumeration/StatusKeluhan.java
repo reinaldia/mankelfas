@@ -5,7 +5,8 @@ package com.mankelfas.enumeration;
  */
 public enum StatusKeluhan {
     DILAPORKAN,
+    DITUGASKAN,
     DIPROSES,
     SELESAI,
-    DIBATALKAN
+    DITOLAK
 }

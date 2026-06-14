@@ -1,0 +1,182 @@
+/* Gaya Struktural Umum (Layout & Spacing) */
+
+.root {
+    -fx-font-family: "Inter", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    -fx-font-size: 14px;
+}
+
+/* Sidebar styling */
+.sidebar {
+    -fx-padding: 20px;
+    -fx-spacing: 15px;
+}
+
+/* Sidebar Buttons */
+.sidebar .button {
+    -fx-min-width: 200px;
+    -fx-alignment: center-left;
+    -fx-padding: 10px 15px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+}
+
+/* Cards & Panels */
+.card {
+    -fx-background-radius: 12px;
+    -fx-padding: 20px;
+    -fx-spacing: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 4);
+}
+
+/* Titles & Headers */
+.title-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+.subtitle-label {
+    -fx-font-size: 18px;
+}
+.header-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Standard Input Fields */
+.text-field, .password-field, .combo-box, .text-area {
+    -fx-background-radius: 8px;
+    -fx-padding: 8px;
+}
+
+/* General Buttons */
+.btn {
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 16px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+/* Data Table */
+.table-view {
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-padding: 0;
+}
+.table-view .column-header-background {
+    -fx-background-radius: 8px 8px 0 0;
+}
+
+/* Profile specific styles */
+.profile-picture {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 15, 0, 0, 5);
+}
+
+/* --- UI Refinements --- */
+.btn-danger {
+    -fx-background-color: #E53935 !important;
+    -fx-text-fill: white !important;
+    -fx-background-radius: 20px !important;
+    -fx-font-weight: bold;
+}
+
+.btn-danger:hover {
+    -fx-background-color: #D32F2F !important;
+}
+
+.btn-toggle-theme {
+    -fx-background-color: #455A64 !important;
+    -fx-text-fill: white !important;
+    -fx-background-radius: 20px !important;
+    -fx-font-weight: bold;
+}
+
+.btn-toggle-theme:hover {
+    -fx-background-color: #37474F !important;
+}
+
+/* Navbar Styling */
+.navbar {
+    -fx-padding: 10px 20px;
+    -fx-spacing: 15px;
+    -fx-alignment: center-left;
+    -fx-background-color: #B71C1C;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);
+}
+.btn-icon-only {
+    -fx-background-radius: 50%;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-font-size: 16px;
+    -fx-padding: 0;
+}
+.btn-kapsul {
+    -fx-background-radius: 20px;
+}
+
+.navbar .title-label {
+    -fx-text-fill: white;
+}
+
+/* Chips for Prioritas */
+.chip {
+    -fx-padding: 4px 10px;
+    -fx-background-radius: 12px;
+    -fx-text-fill: white !important;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+.chip-rendah { -fx-background-color: #4CAF50; }
+.chip-sedang { -fx-background-color: #FF9800; }
+.chip-tinggi { -fx-background-color: #F44336; }
+.chip-urgent { -fx-background-color: #B71C1C; }
+
+/* Glassmorphism Classes */
+.card, .sidebar, .navbar {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-border-width: 1px;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);
+}
+
+.sidebar {
+    -fx-background-radius: 0 15px 15px 0;
+    -fx-border-radius: 0 15px 15px 0;
+}
+
+.navbar {
+    -fx-background-radius: 0 0 15px 15px;
+    -fx-border-radius: 0 0 15px 15px;
+    -fx-background-color: rgba(183, 28, 28, 0.8); /* Translucent Red */
+}
+
+/* Make table transparent to fit glass theme */
+.table-view {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+/* Statistic Cards */
+.stat-card {
+    -fx-padding: 15;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 4);
+    -fx-spacing: 5;
+}
+.stat-card .stat-title {
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-opacity: 0.8;
+}
+.stat-card .stat-value {
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+.stat-blue { -fx-background-color: linear-gradient(to bottom right, #4A90E2, #357ABD); }
+.stat-green { -fx-background-color: linear-gradient(to bottom right, #2ECC71, #27AE60); }
+.stat-red { -fx-background-color: linear-gradient(to bottom right, #E74C3C, #C0392B); }

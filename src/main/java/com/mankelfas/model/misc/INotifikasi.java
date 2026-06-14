@@ -4,6 +4,7 @@ package com.mankelfas.model.misc;
  * Mendefinisikan standar struktur untuk fungsi pengiriman pemberitahuan.
  * Memastikan setiap fitur yang mengirim notifikasi mengikuti aturan dasar yang telah ditetapkan.
  */
+public interface INotifikasi {
     /**
      * Memancarkan pesan sinyal pemberitahuan kepada objek penerima yang dituju.
      * 

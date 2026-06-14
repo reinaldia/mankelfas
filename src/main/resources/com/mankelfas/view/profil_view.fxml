@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mankelfas.controller.ProfilController" styleClass="card" prefWidth="400" prefHeight="450">
+   <children>
+      <Label text="Profil Pengguna" styleClass="title-label" />
+      
+      <!-- Lingkaran Foto Profil Palsu -->
+      <VBox alignment="CENTER" style="-fx-background-color: #2196F3; -fx-background-radius: 50%; -fx-min-width: 100px; -fx-min-height: 100px; -fx-max-width: 100px; -fx-max-height: 100px;" styleClass="profile-picture">
+          <Label fx:id="lblInisial" text="U" style="-fx-text-fill: white; -fx-font-size: 48px; -fx-font-weight: bold;"/>
+      </VBox>
+
+      <Label fx:id="lblNama" text="Nama Pengguna" styleClass="subtitle-label" style="-fx-font-weight: bold;"/>
+      <Label fx:id="lblRole" text="Role" style="-fx-text-fill: #888888;"/>
+      
+      <VBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 20px; -fx-border-color: #E0E0E0; -fx-border-radius: 8px;">
+          <HBox spacing="10">
+              <Label text="ID:" style="-fx-font-weight: bold;" prefWidth="60"/>
+              <Label fx:id="lblId" text="-" />
+          </HBox>
+          <HBox spacing="10">
+              <Label text="Email:" style="-fx-font-weight: bold;" prefWidth="60"/>
+              <Label fx:id="lblEmail" text="-" />
+          </HBox>
+          <HBox spacing="10">
+              <Label fx:id="lblLabelEkstra" text="Ekstra:" style="-fx-font-weight: bold;" prefWidth="60"/>
+              <Label fx:id="lblNilaiEkstra" text="-" />
+          </HBox>
+      </VBox>
+
+      <HBox spacing="10" alignment="CENTER">
+          <Button text="Edit Profil" onAction="#editProfil" styleClass="btn, btn-primary" />
+          <Button text="Hapus Akun" onAction="#hapusAkun" styleClass="btn, btn-danger" />
+          <Button text="Tutup" onAction="#tutupProfil" styleClass="btn, btn-secondary" />
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+   </padding>
+</VBox>

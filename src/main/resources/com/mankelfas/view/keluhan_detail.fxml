@@ -5,21 +5,17 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
 
-<VBox spacing="15.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mankelfas.controller.KeluhanDetailController" style="-fx-background-color: #FAFAFA;">
+<GridPane hgap="20.0" vgap="10.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mankelfas.controller.KeluhanDetailController" styleClass="card">
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
-   
-   <Label text="Detail Keluhan &amp; Fasilitas">
-      <font>
-         <Font name="Montserrat Bold" size="20.0" />
-      </font>
-   </Label>
 
-   <VBox spacing="10.0" style="-fx-border-color: #ccc; -fx-border-width: 1; -fx-padding: 10;">
+   <VBox spacing="10.0" style="-fx-border-color: #ccc; -fx-border-width: 1; -fx-padding: 10;" GridPane.columnIndex="0" GridPane.rowIndex="0">
        <Label text="Informasi Keluhan">
           <font><Font name="System Bold" size="14.0"/></font>
        </Label>
@@ -30,7 +26,7 @@
        <Label fx:id="lblDeskripsi" text="Deskripsi: " wrapText="true"/>
    </VBox>
 
-   <VBox spacing="10.0" style="-fx-border-color: #ccc; -fx-border-width: 1; -fx-padding: 10;">
+   <VBox spacing="10.0" style="-fx-border-color: #ccc; -fx-border-width: 1; -fx-padding: 10;" GridPane.columnIndex="0" GridPane.rowIndex="1">
        <Label text="Informasi Fasilitas">
           <font><Font name="System Bold" size="14.0"/></font>
        </Label>
@@ -40,12 +36,29 @@
        <Label fx:id="lblKondisi" text="Kondisi Terakhir: " />
    </VBox>
 
-   <VBox spacing="10.0" style="-fx-border-color: #ccc; -fx-border-width: 1; -fx-padding: 10;" VBox.vgrow="ALWAYS">
-       <Label text="Riwayat &amp; Komentar">
+   <VBox spacing="10.0" style="-fx-border-color: #ccc; -fx-border-width: 1; -fx-padding: 10;" GridPane.columnIndex="0" GridPane.rowIndex="2">
+       <Label text="Foto Bukti Keluhan">
           <font><Font name="System Bold" size="14.0"/></font>
        </Label>
-       <TextArea fx:id="txtAreaRiwayat" editable="false" VBox.vgrow="ALWAYS" />
+       <javafx.scene.layout.StackPane alignment="CENTER" prefHeight="150">
+           <Label fx:id="lblNoFoto" text="Tidak ada foto bukti." textFill="#999999" />
+           <ImageView fx:id="imgBukti" fitWidth="200" fitHeight="150" preserveRatio="true"/>
+       </javafx.scene.layout.StackPane>
    </VBox>
 
-   <Button text="Tutup Detail" onAction="#tutupDetail" style="-fx-background-color: #607D8B; -fx-text-fill: white;" />
-</VBox>
+   <VBox spacing="10.0" style="-fx-border-color: #ccc; -fx-border-width: 1; -fx-padding: 10;" GridPane.columnIndex="1" GridPane.rowIndex="0">
+       <Label text="Riwayat Keluhan">
+          <font><Font name="System Bold" size="14.0"/></font>
+       </Label>
+       <TextArea fx:id="txtAreaRiwayatStatus" editable="false" prefHeight="100" />
+   </VBox>
+
+   <VBox spacing="10.0" style="-fx-border-color: #ccc; -fx-border-width: 1; -fx-padding: 10;" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.vgrow="ALWAYS">
+       <Label text="Komentar Teknisi">
+          <font><Font name="System Bold" size="14.0"/></font>
+       </Label>
+       <TextArea fx:id="txtAreaKomentar" editable="false" VBox.vgrow="ALWAYS" />
+   </VBox>
+
+   <Button text="Tutup Detail" onAction="#tutupDetail" style="-fx-background-color: #607D8B; -fx-text-fill: white;" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="RIGHT"/>
+</GridPane>

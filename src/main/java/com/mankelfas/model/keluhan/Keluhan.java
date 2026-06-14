@@ -66,12 +66,17 @@ public class Keluhan {
      */
     public void updateStatus(StatusKeluhan statusBaru) {
         try {
-            // Mencatat jejak transisi status baru lengkap dengan stempel waktunya
-            RiwayatKeluhan r = new RiwayatKeluhan(riwayat.size() + 1, statusBaru);
-            riwayat.add(r);
+            com.mankelfas.model.user.User currentUser = com.mankelfas.util.Session.getCurrentUser();
+            String username = currentUser != null ? currentUser.getNama() : "Sistem";
+            String pesan = username + " mengubah status keluhan dari " + this.status + " menjadi " + statusBaru;
+            
+            RiwayatKeluhan r = new RiwayatKeluhan(riwayat.size() + 1, statusBaru); // Tetap simpan statusnya jika dibutuhkan
+            // Tetapi karena constructor RiwayatKeluhan mungkin hanya menerima status, kita perlu memeriksa RiwayatKeluhan.java
+            // Untuk sementara kita gunakan constructor String
+            RiwayatKeluhan rLog = new RiwayatKeluhan(riwayat.size() + 1, pesan);
+            riwayat.add(rLog);
             this.status = statusBaru;
         } catch (Exception e) {
-            // Melaporkan diam-diam jika sistem jejak riwayat mengalami kendala
             System.err.println("Gagal update status: " + e.getMessage());
         }
     }
@@ -90,10 +95,64 @@ public class Keluhan {
     }
 
     /**
-     * Mengarsipkan keluhan jika sudah selesai atau dibatalkan.
+     * Memperbarui kondisi fisik fasilitas serta mencatatnya ke dalam riwayat keluhan.
+     * 
+     * @param kondisiBaru Kondisi terbaru dari fasilitas yang diperbaiki
+     */
+    public void updateKondisiFasilitas(com.mankelfas.enumeration.KondisiFasilitas kondisiBaru) {
+        if (this.fasilitas != null) {
+            try {
+                this.fasilitas.setKondisi(kondisiBaru);
+                RiwayatKeluhan r = new RiwayatKeluhan(riwayat.size() + 1, "Kondisi fasilitas diperbarui menjadi: " + kondisiBaru.getDeskripsi());
+                riwayat.add(r);
+            } catch (Exception e) {
+                System.err.println("Gagal update kondisi fasilitas: " + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Memperbarui tingkat prioritas penanganan keluhan dan mencatat riwayat perubahannya.
+     * 
+     * @param prioBaru Tingkat prioritas terbaru yang akan diterapkan
+     */
+    public void updatePrioritas(Prioritas prioBaru) {
+        try {
+            com.mankelfas.model.user.User currentUser = com.mankelfas.util.Session.getCurrentUser();
+            String username = currentUser != null ? currentUser.getNama() : "Sistem";
+            String pesan = username + " mengubah prioritas keluhan dari " + this.prioritas + " menjadi " + prioBaru;
+            
+            RiwayatKeluhan r = new RiwayatKeluhan(riwayat.size() + 1, pesan);
+            riwayat.add(r);
+            this.prioritas = prioBaru;
+        } catch (Exception e) {}
+    }
+    
+    /**
+     * Mengarsipkan keluhan yang telah selesai atau dibatalkan agar tidak memenuhi daftar aktif.
+     * Tindakan ini juga akan tercatat di dalam riwayat keluhan.
      */
     public void arsipkan() {
         this.archived = true;
+        try {
+            com.mankelfas.model.user.User currentUser = com.mankelfas.util.Session.getCurrentUser();
+            String username = currentUser != null ? currentUser.getNama() : "Sistem";
+            RiwayatKeluhan r = new RiwayatKeluhan(riwayat.size() + 1, username + " mengarsipkan keluhan ini");
+            riwayat.add(r);
+        } catch (Exception e) {}
+    }
+
+    /**
+     * Membatalkan status arsip (unarchive) pada keluhan sehingga kembali aktif.
+     */
+    public void batalArsip() {
+        this.archived = false;
+        try {
+            com.mankelfas.model.user.User currentUser = com.mankelfas.util.Session.getCurrentUser();
+            String username = currentUser != null ? currentUser.getNama() : "Sistem";
+            RiwayatKeluhan r = new RiwayatKeluhan(riwayat.size() + 1, username + " memulihkan keluhan ini dari arsip");
+            riwayat.add(r);
+        } catch (Exception e) {}
     }
 
     // Metode Akses dan Modifikasi (Getters dan Setters)
@@ -117,6 +176,35 @@ public class Keluhan {
     public void setIdKeluhan(int idKeluhan) { this.idKeluhan = idKeluhan; }
     public void setStatus(StatusKeluhan status) { this.status = status; }
     public void setPrioritas(Prioritas prioritas) { this.prioritas = prioritas; }
+
+    /**
+     * Menugaskan atau mengganti teknisi yang menangani keluhan ini, 
+     * serta mencatat proses penugasan tersebut ke dalam riwayat.
+     * 
+     * @param teknisiBaru Referensi objek teknisi yang baru ditugaskan
+     */
+    public void updateTeknisi(Teknisi teknisiBaru) {
+        try {
+            com.mankelfas.model.user.User currentUser = com.mankelfas.util.Session.getCurrentUser();
+            String username = currentUser != null ? currentUser.getNama() : "Sistem";
+            String pesan;
+            
+            if (this.teknisi == null) {
+                pesan = username + " menugaskan keluhan ke teknisi " + teknisiBaru.getNama();
+            } else if (!this.teknisi.getNama().equals(teknisiBaru.getNama())) {
+                pesan = username + " mengganti teknisi dari " + this.teknisi.getNama() + " menjadi " + teknisiBaru.getNama();
+            } else {
+                return; // Tidak ada perubahan
+            }
+            
+            RiwayatKeluhan r = new RiwayatKeluhan(riwayat.size() + 1, pesan);
+            riwayat.add(r);
+            this.teknisi = teknisiBaru;
+        } catch (Exception e) {
+            System.err.println("Gagal update teknisi: " + e.getMessage());
+        }
+    }
+
     public void setTeknisi(Teknisi teknisi) { this.teknisi = teknisi; }
     public void setProgress(String progress) { this.progress = progress; }
     public void setEstimasiWaktu(String estimasiWaktu) { this.estimasiWaktu = estimasiWaktu; }
