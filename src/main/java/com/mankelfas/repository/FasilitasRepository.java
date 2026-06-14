@@ -14,8 +14,10 @@ import java.util.List;
 public class FasilitasRepository implements IFasilitasRepository {
 
     /**
-     * Mengambil daftar semua fasilitas yang ada di database.
-     * Dapat digunakan untuk mengisi pilihan combobox (dropdown) saat Mahasiswa akan melaporkan masalah.
+     * Membuka koneksi database dan menarik keseluruhan data fasilitas yang tersedia.
+     * Dapat digunakan untuk mengisi pilihan pada menu saat Mahasiswa melaporkan masalah.
+     * 
+     * @return Kumpulan data fasilitas
      */
     @Override
     public List<Fasilitas> getAllFasilitas() {
@@ -44,8 +46,11 @@ public class FasilitasRepository implements IFasilitasRepository {
     }
 
     /**
-     * Menyimpan data fasilitas baru ke dalam database.
-     * Mengembalikan true jika fasilitas sukses ditambahkan.
+     * Merekam data fasilitas baru secara permanen ke dalam tabel database.
+     * Secara otomatis mengambil identitas unik yang dibangkitkan oleh sistem.
+     * 
+     * @param fasilitas Entitas fasilitas yang ingin ditambahkan
+     * @return Status keberhasilan operasi penambahan
      */
     @Override
     public boolean addFasilitas(Fasilitas fasilitas) {
@@ -75,7 +80,10 @@ public class FasilitasRepository implements IFasilitasRepository {
     }
 
     /**
-     * Memperbarui informasi dari sebuah fasilitas (seperti mengubah kondisi menjadi 'Rusak' atau 'Bagus').
+     * Menjalankan instruksi pembaruan keterangan untuk fasilitas tertentu di database.
+     * 
+     * @param fasilitas Entitas fasilitas dengan informasi terbaru
+     * @return Status keberhasilan proses pembaruan
      */
     @Override
     public boolean updateFasilitas(Fasilitas fasilitas) {
@@ -96,6 +104,12 @@ public class FasilitasRepository implements IFasilitasRepository {
         }
     }
 
+    /**
+     * Mencabut dan menghapus data fasilitas sepenuhnya dari database.
+     * 
+     * @param idFasilitas Nomor pengenal fasilitas yang hendak dihapus
+     * @return Status keberhasilan proses penghapusan
+     */
     @Override
     public boolean deleteFasilitas(int idFasilitas) {
         String sql = "DELETE FROM fasilitas WHERE id_fasilitas=?";

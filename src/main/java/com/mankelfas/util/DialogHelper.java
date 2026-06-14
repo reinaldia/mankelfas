@@ -7,6 +7,13 @@ import javafx.scene.layout.Priority;
 
 public class DialogHelper {
 
+    /**
+     * Menampilkan kotak pesan mengambang untuk memberikan informasi kepada pengguna.
+     * 
+     * @param title Judul utama pada jendela pesan
+     * @param header Teks sorotan ringkas di bagian atas
+     * @param content Penjelasan lengkap atau detail dari pesan tersebut
+     */
     public static void showInfoDialog(String title, String header, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);

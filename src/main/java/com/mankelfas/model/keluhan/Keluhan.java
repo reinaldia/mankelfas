@@ -10,8 +10,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Entitas utama yang merepresentasikan sebuah laporan masalah dari Mahasiswa.
- * Menyimpan relasi lengkap: siapa yang melapor, teknisi siapa yang menangani, serta di mana fasilitas yang rusak.
+ * Merupakan entitas utama yang merepresentasikan laporan kerusakan.
+ * Merangkum informasi pelapor, fasilitas yang rusak, identitas teknisi, hingga riwayat perkembangan perbaikan.
  */
 public class Keluhan {
     private int idKeluhan;
@@ -32,29 +32,55 @@ public class Keluhan {
     private List<RiwayatKeluhan> riwayat;
     private List<Komentar> komentar;
 
+    /**
+     * Mengonstruksi wujud utuh sebuah keluhan baru yang diajukan oleh pengguna mahasiswa.
+     * 
+     * @param idKeluhan Tanda pengenal spesifik dari sistem database
+     * @param deskripsi Uraian teks terkait kendala yang diamati pelapor
+     * @param fotoBukti Alamat letak direktori tempat foto bukti disimpan
+     * @param pelapor Referensi objek identitas mahasiswa yang melapor
+     * @param fasilitas Referensi objek barang atau tempat yang dikeluhkan
+     */
     public Keluhan(int idKeluhan, String deskripsi, String fotoBukti, Mahasiswa pelapor, Fasilitas fasilitas) {
         this.idKeluhan = idKeluhan;
         this.deskripsi = deskripsi;
         this.fotoBukti = fotoBukti;
         this.pelapor = pelapor;
         this.fasilitas = fasilitas;
+        
+        // Secara mandiri menandai waktu laporan dibuat secara waktu nyata
         this.tanggal = new Date();
+        
+        // Menetapkan status awal pada saat keluhan pertama kali dibentuk
         this.status = StatusKeluhan.DILAPORKAN;
         this.prioritas = Prioritas.RENDAH;
         this.riwayat = new ArrayList<>();
         this.komentar = new ArrayList<>();
     }
 
+    /**
+     * Menerapkan perubahan status kerja ke dalam sistem keluhan ini.
+     * Bersamaan dengan itu, kejadian ini juga terekam ke dalam buku harian riwayat.
+     * 
+     * @param statusBaru Kondisi operasional terbaru yang hendak disematkan
+     */
     public void updateStatus(StatusKeluhan statusBaru) {
         try {
+            // Mencatat jejak transisi status baru lengkap dengan stempel waktunya
             RiwayatKeluhan r = new RiwayatKeluhan(riwayat.size() + 1, statusBaru);
             riwayat.add(r);
             this.status = statusBaru;
         } catch (Exception e) {
+            // Melaporkan diam-diam jika sistem jejak riwayat mengalami kendala
             System.err.println("Gagal update status: " + e.getMessage());
         }
     }
 
+    /**
+     * Menyisipkan tanggapan, balasan, atau instruksi dari teknisi ke daftar catatan keluhan.
+     * 
+     * @param k Entitas komentar baru yang hendak dilampirkan
+     */
     public void tambahKomentar(Komentar k) {
         try {
             komentar.add(k);
@@ -70,7 +96,7 @@ public class Keluhan {
         this.archived = true;
     }
 
-    // Getters and Setters
+    // Metode Akses dan Modifikasi (Getters dan Setters)
     public int getIdKeluhan() { return idKeluhan; }
     public String getDeskripsi() { return deskripsi; }
     public Date getTanggal() { return tanggal; }

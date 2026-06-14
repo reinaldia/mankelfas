@@ -9,13 +9,21 @@ public class UserService implements IUserService {
 
     private final IUserRepository userRepository;
     
-    // Singleton pattern
+    // Implementasi pola desain Singleton untuk memastikan hanya ada satu instansi layanan
     private static UserService instance;
 
+    /**
+     * Menyiapkan alat komunikasi data untuk mengakses tabel pengguna di repositori.
+     */
     public UserService() {
         this.userRepository = new UserRepository();
     }
     
+    /**
+     * Mengamankan satu pintu akses (Singleton) untuk operasional manajemen pengguna.
+     * 
+     * @return Instansi aktif UserService
+     */
     public static UserService getInstance() {
         if (instance == null) {
             instance = new UserService();
@@ -23,6 +31,13 @@ public class UserService implements IUserService {
         return instance;
     }
 
+    /**
+     * Menilai kelayakan upaya masuk ke dalam aplikasi menggunakan email dan password.
+     * 
+     * @param email Kredensial surat elektronik
+     * @param password Kredensial password
+     * @return Objek User apabila valid, sebaliknya null
+     */
     @Override
     public User authenticate(String email, String password) {
         if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
@@ -31,11 +46,22 @@ public class UserService implements IUserService {
         return userRepository.login(email, password);
     }
 
+    /**
+     * Mengambil kompilasi seluruh pengguna terdaftar dari database.
+     * 
+     * @return Daftar pengguna lintas jabatan
+     */
     @Override
     public List<User> getAllUsers() {
         return userRepository.getAllUsers();
     }
 
+    /**
+     * Memasukkan identitas anggota baru ke dalam lingkungan sistem setelah lulus sensor keamanan.
+     * 
+     * @param user Data pengguna baru
+     * @return Keberhasilan penambahan
+     */
     @Override
     public boolean addUser(User user) {
         validateUser(user);
@@ -50,6 +76,12 @@ public class UserService implements IUserService {
         return userRepository.addUser(user);
     }
 
+    /**
+     * Menyesuaikan detail profil pengguna yang telah ada dengan informasi mutakhir.
+     * 
+     * @param user Pengguna beserta detail perubahannya
+     * @return Status keberhasilan modifikasi
+     */
     @Override
     public boolean updateUser(User user) {
         if (user == null || user.getIdUser() <= 0) {
@@ -68,6 +100,12 @@ public class UserService implements IUserService {
         return userRepository.updateUser(user);
     }
 
+    /**
+     * Menghapus hak dan keberadaan pengguna dari sistem.
+     * 
+     * @param idUser Penanda pengguna yang akan dikeluarkan
+     * @return Konfirmasi kesuksesan eliminasi
+     */
     @Override
     public boolean deleteUser(int idUser) {
         if (idUser <= 0) {

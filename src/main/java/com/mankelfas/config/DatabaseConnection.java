@@ -14,6 +14,12 @@ public class DatabaseConnection {
 
     private DatabaseConnection() {}
 
+    /**
+     * Membangun jembatan komunikasi antara aplikasi dengan database MySQL.
+     * Menggunakan pengaturan alamat bawaan untuk sistem lokal.
+     * 
+     * @return Objek Connection yang siap digunakan, atau kosong (null) jika server menolak
+     */
     public static Connection getConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");

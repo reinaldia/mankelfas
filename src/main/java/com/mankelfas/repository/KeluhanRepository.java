@@ -22,8 +22,10 @@ public class KeluhanRepository implements IKeluhanRepository {
     private FasilitasRepository fasilitasRepository = new FasilitasRepository();
 
     /**
-     * Mengambil daftar semua keluhan dari database.
-     * Menggabungkan data dari tabel keluhan, fasilitas, dan pelapor menjadi satu kesatuan objek Keluhan.
+     * Mengambil daftar seluruh keluhan dari database.
+     * Merangkai kembali data relasional dari tabel keluhan, fasilitas, dan pelapor menjadi satu kesatuan objek keluhan yang utuh.
+     * 
+     * @return Kumpulan objek keluhan
      */
     @Override
     public List<Keluhan> getAllKeluhan() {
@@ -34,7 +36,7 @@ public class KeluhanRepository implements IKeluhanRepository {
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             
-            // In a real production app, we would cache these to avoid N+1 query problems.
+            // Mengambil semua data pengguna dan fasilitas untuk dipasangkan ke dalam objek keluhan yang bersesuaian.
             List<User> allUsers = userRepository.getAllUsers();
             List<Fasilitas> allFasilitas = fasilitasRepository.getAllFasilitas();
 
@@ -92,8 +94,11 @@ public class KeluhanRepository implements IKeluhanRepository {
     }
 
     /**
-     * Menyimpan data keluhan baru ke dalam database.
-     * Akan mengembalikan true jika sukses dan secara otomatis memasukkan ID yang dihasilkan database ke objek Keluhan.
+     * Merekam data pengajuan keluhan baru ke dalam database.
+     * Jika berhasil, akan secara otomatis menyematkan nomor identitas yang dibangkitkan oleh sistem ke dalam objek keluhan tersebut.
+     * 
+     * @param keluhan Objek keluhan baru yang akan disimpan
+     * @return Tanda keberhasilan operasi penyimpanan
      */
     @Override
     public boolean addKeluhan(Keluhan keluhan) {
@@ -124,8 +129,10 @@ public class KeluhanRepository implements IKeluhanRepository {
     }
 
     /**
-     * Memperbarui status, teknisi yang menangani, atau detail lainnya dari suatu keluhan.
-     * Sangat berguna saat Teknisi memproses atau menyelesaikan keluhan.
+     * Menerapkan pembaruan status, penugasan teknisi, atau detail tenggat waktu ke dalam database.
+     * 
+     * @param keluhan Entitas keluhan yang telah dimodifikasi
+     * @return Tanda keberhasilan operasi pembaruan
      */
     @Override
     public boolean updateKeluhan(Keluhan keluhan) {
@@ -157,6 +164,12 @@ public class KeluhanRepository implements IKeluhanRepository {
         }
     }
 
+    /**
+     * Menghapus baris data keluhan secara permanen dari database.
+     * 
+     * @param idKeluhan Tanda identitas keluhan yang menjadi target penghapusan
+     * @return Tanda keberhasilan operasi penghapusan
+     */
     @Override
     public boolean deleteKeluhan(int idKeluhan) {
         String sql = "DELETE FROM keluhan WHERE id_keluhan=?";

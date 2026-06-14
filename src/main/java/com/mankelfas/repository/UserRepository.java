@@ -17,8 +17,11 @@ import java.util.List;
 public class UserRepository implements IUserRepository {
 
     /**
-     * Mengecek kecocokan email dan password di database.
-     * Mengembalikan objek User jika berhasil login, atau null jika gagal.
+     * Mencari kecocokan pasangan email dan password pada tabel autentikasi database.
+     * 
+     * @param email Alamat email pengguna
+     * @param password Password rahasia
+     * @return Entitas pengguna utuh jika lulus verifikasi, kosong jika gagal
      */
     @Override
     public User login(String email, String password) {
@@ -41,8 +44,9 @@ public class UserRepository implements IUserRepository {
     }
 
     /**
-     * Mengambil seluruh data akun dari tabel users.
-     * Sangat berguna untuk ditampilkan di halaman Kelola Akun oleh Admin.
+     * Menarik keseluruhan data akun pengguna dari database.
+     * 
+     * @return Kumpulan objek pengguna dari beragam tingkatan wewenang
      */
     @Override
     public List<User> getAllUsers() {
@@ -62,8 +66,11 @@ public class UserRepository implements IUserRepository {
     }
 
     /**
-     * Menambahkan akun baru ke database dan mengambil ID yang baru saja digenerate oleh MySQL.
-     * Menyimpan data spesifik sesuai role (misalnya NIM untuk Mahasiswa).
+     * Menyisipkan pendaftaran akun pengguna baru ke dalam database.
+     * Menyesuaikan parameter masukan data berdasarkan spesifikasi peran (contohnya nomor induk untuk mahasiswa).
+     * 
+     * @param user Data pengguna baru yang akan dicatat
+     * @return Tanda keberhasilan operasi pendaftaran
      */
     @Override
     public boolean addUser(User user) {
@@ -109,6 +116,12 @@ public class UserRepository implements IUserRepository {
         return false;
     }
 
+    /**
+     * Melakukan pembaruan terhadap detail profil atau hak akses pengguna yang sudah ada.
+     * 
+     * @param user Data pengguna dengan perubahan mutakhir
+     * @return Tanda keberhasilan pembaruan informasi
+     */
     @Override
     public boolean updateUser(User user) {
         String sql = "UPDATE users SET nama=?, email=?, password=?, role=?, nim=?, level=?, keahlian=? WHERE id_user=?";
@@ -142,6 +155,12 @@ public class UserRepository implements IUserRepository {
         }
     }
 
+    /**
+     * Mencabut hak akses dengan menghapus pengguna secara permanen dari database.
+     * 
+     * @param idUser Nomor identitas pengguna target
+     * @return Tanda keberhasilan proses penghapusan
+     */
     @Override
     public boolean deleteUser(int idUser) {
         String sql = "DELETE FROM users WHERE id_user=?";
@@ -155,6 +174,13 @@ public class UserRepository implements IUserRepository {
         }
     }
 
+    /**
+     * Memetakan struktur baris hasil temuan database menjadi objek identitas pengguna yang konkret.
+     * 
+     * @param rs Kumpulan hasil kueri dari database
+     * @return Objek pengguna spesifik berdasarkan jenis perannya
+     * @throws SQLException Bila proses pemetaan menemukan error pembacaan
+     */
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         String role = rs.getString("role");
         int id = rs.getInt("id_user");
