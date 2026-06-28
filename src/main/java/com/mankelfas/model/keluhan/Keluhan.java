@@ -69,13 +69,12 @@ public class Keluhan {
             com.mankelfas.model.user.User currentUser = com.mankelfas.util.Session.getCurrentUser();
             String username = currentUser != null ? currentUser.getNama() : "Sistem";
             String pesan = username + " mengubah status keluhan dari " + this.status + " menjadi " + statusBaru;
-            
-            RiwayatKeluhan r = new RiwayatKeluhan(riwayat.size() + 1, statusBaru); // Tetap simpan statusnya jika dibutuhkan
-            // Tetapi karena constructor RiwayatKeluhan mungkin hanya menerima status, kita perlu memeriksa RiwayatKeluhan.java
-            // Untuk sementara kita gunakan constructor String
             RiwayatKeluhan rLog = new RiwayatKeluhan(riwayat.size() + 1, pesan);
             riwayat.add(rLog);
             this.status = statusBaru;
+            
+            // Mengirim notifikasi perubahan status kepada pelapor / sistem
+            new com.mankelfas.model.misc.NotifikasiSistem().kirimNotif("Keluhan #" + this.idKeluhan + ": " + pesan);
         } catch (Exception e) {
             System.err.println("Gagal update status: " + e.getMessage());
         }

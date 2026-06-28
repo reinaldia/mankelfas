@@ -1,7 +1,6 @@
 package com.mankelfas.controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -19,7 +18,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.util.stream.Collectors;
 import java.io.File;
-import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import javafx.scene.control.TextField;
@@ -28,10 +26,6 @@ import javafx.application.Platform;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.time.LocalDateTime;
-import javafx.scene.control.TextInputDialog;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import com.mankelfas.config.DatabaseConnection;
 
 /**
  * Mengelola UI khusus untuk pengguna berstatus Teknisi.
