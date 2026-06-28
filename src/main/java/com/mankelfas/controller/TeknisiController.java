@@ -145,6 +145,7 @@ public class TeknisiController {
             stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
             stage.setTitle("Detail Keluhan & Fasilitas");
             stage.setScene(new javafx.scene.Scene(root));
+            com.mankelfas.util.ThemeManager.applyTheme(stage.getScene());
             stage.showAndWait();
         } catch (Exception e) {
             com.mankelfas.util.DialogHelper.showErrorDialog("Gagal Memuat UI", "Terjadi kesalahan: " + e.getMessage());
@@ -266,7 +267,8 @@ public class TeknisiController {
             }
             return null;
         });
-
+        
+        com.mankelfas.util.ThemeManager.applyTheme(dialog.getDialogPane());
         java.util.Optional<String[]> result = dialog.showAndWait();
         result.ifPresent(arr -> {
             try {

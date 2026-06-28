@@ -126,9 +126,7 @@ public class FasilitasController {
             DialogHelper.showInfoDialog("Info Fasilitas", "Detail Kelengkapan Fasilitas", fullInfo);
         } else {
             // Memunculkan teguran jika pengguna lupa menyorot data
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("Pilih fasilitas di tabel terlebih dahulu!");
-            alert.show();
+            DialogHelper.showWarningDialog("Peringatan", "Pilih fasilitas di tabel terlebih dahulu!");
         }
     }
 
@@ -165,11 +163,13 @@ public class FasilitasController {
             // Mengatur parameter jendela agar fokus terpusat pada form ini (modal)
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Tambah Fasilitas Baru");
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
+            com.mankelfas.util.ThemeManager.applyTheme(stage.getScene());
             stage.showAndWait();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Gagal memuat form tambah fasilitas: " + e.getMessage());
             alert.show();
         }
@@ -228,6 +228,7 @@ public class FasilitasController {
             return null;
         });
 
+        com.mankelfas.util.ThemeManager.applyTheme(dialog.getDialogPane());
         java.util.Optional<Fasilitas> result = dialog.showAndWait();
         result.ifPresent(fas -> {
             try {
@@ -251,8 +252,10 @@ public class FasilitasController {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
         alert.setTitle("Hapus Fasilitas");
         alert.setHeaderText("Konfirmasi Penghapusan");
-        alert.setContentText("Apakah Anda yakin ingin menghapus fasilitas '" + selected.getNama() + "'?");
+        alert.setGraphic(null);
+        alert.setContentText("Apakah Anda yakin ingin menghapus fasilitas: " + selected.getNama() + "?");
 
+        com.mankelfas.util.ThemeManager.applyTheme(alert.getDialogPane());
         java.util.Optional<javafx.scene.control.ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
             try {

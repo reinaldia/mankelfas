@@ -75,24 +75,35 @@ public class MahasiswaController {
             keluhanService = KeluhanService.getInstance();
             fasilitasList = keluhanService.getAllFasilitas();
 
+            setupComboBox(comboLokasi);
+            setupComboBox(comboFasilitas);
+            setupComboBox(comboKondisi);
+
             // Menyusun daftar lokasi unik
             java.util.List<String> lokasis = fasilitasList.stream().map(Fasilitas::getLokasi).distinct().collect(Collectors.toList());
             comboLokasi.getItems().addAll(lokasis);
             
+            // Disable comboFasilitas pada awalnya
+            comboFasilitas.setDisable(true);
+            
             // Ketika lokasi dipilih, saring fasilitas
             comboLokasi.setOnAction(e -> {
+                comboFasilitas.getSelectionModel().clearSelection();
+                comboFasilitas.setValue(null);
                 comboFasilitas.getItems().clear();
+                
                 String loc = comboLokasi.getValue();
-                for (Fasilitas f : fasilitasList) {
-                    if (loc == null || f.getLokasi().equals(loc)) {
-                        comboFasilitas.getItems().add(f.getInfo());
+                if (loc != null && !loc.trim().isEmpty()) {
+                    comboFasilitas.setDisable(false);
+                    for (Fasilitas f : fasilitasList) {
+                        if (f.getLokasi().equals(loc)) {
+                            comboFasilitas.getItems().add(f.getInfo());
+                        }
                     }
+                } else {
+                    comboFasilitas.setDisable(true);
                 }
             });
-
-            for (Fasilitas f : fasilitasList) {
-                comboFasilitas.getItems().add(f.getInfo());
-            }
 
             comboKondisi.getItems().addAll(
                 com.mankelfas.enumeration.KondisiFasilitas.RUSAK_RINGAN,
@@ -122,6 +133,7 @@ public class MahasiswaController {
         } catch (Exception e) {
             // Melaporkan kepada pengguna jika terjadi kegagalan pemuatan data
             Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Gagal memuat data dashboard: " + e.getMessage());
             alert.show();
         }
@@ -131,23 +143,35 @@ public class MahasiswaController {
      * Membuka jendela dialog pencarian file (File Explorer) agar pengguna dapat menyisipkan foto bukti kerusakan.
      */
 
+    /**
+     * Membersihkan pilihan pada kotak Lokasi dan mengembalikan teks panduan (placeholder).
+     * Fungsi ini juga akan secara otomatis memicu pembersihan pada kotak Fasilitas 
+     * karena terikat dengan event listener pada comboLokasi.
+     */
     @FXML
     private void clearLokasi() {
         comboLokasi.getSelectionModel().clearSelection();
-        comboFasilitas.getItems().clear();
-        for (Fasilitas f : fasilitasList) {
-            comboFasilitas.getItems().add(f.getInfo());
-        }
+        comboLokasi.setValue(null);
     }
 
+    /**
+     * Membersihkan pilihan pada kotak Fasilitas secara mandiri 
+     * dan memaksa teks panduan (placeholder) untuk muncul kembali.
+     */
     @FXML
     private void clearFasilitas() {
         comboFasilitas.getSelectionModel().clearSelection();
+        comboFasilitas.setValue(null);
     }
 
+    /**
+     * Membersihkan pilihan pada kotak Kondisi Saat Ini 
+     * dan mengembalikan teks panduan awal.
+     */
     @FXML
     private void clearKondisi() {
         comboKondisi.getSelectionModel().clearSelection();
+        comboKondisi.setValue(null);
     }
 
     @FXML
@@ -234,16 +258,19 @@ public class MahasiswaController {
 
                 // Mengabarkan pesan keberhasilan kepada pelapor
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
                 alert.setContentText("Keluhan berhasil dikirim dan tersimpan di database!");
                 alert.show();
             } catch (Exception e) {
                 // Memberikan rincian jika operasi perekaman gagal
                 Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
                 alert.setContentText("Terjadi kesalahan saat menyimpan keluhan: " + e.getMessage());
                 alert.show();
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Pilih fasilitas, kondisi, dan isi deskripsi!");
             alert.show();
         }
@@ -270,16 +297,18 @@ public class MahasiswaController {
                 // Menampilkan layar detail dalam mode terfokus (modal)
                 Stage stage = new Stage();
                 stage.initModality(Modality.APPLICATION_MODAL);
-                stage.setTitle("Detail Fasilitas & Keluhan");
                 stage.setScene(new Scene(root));
+                com.mankelfas.util.ThemeManager.applyTheme(stage.getScene());
                 stage.showAndWait();
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
                 alert.setContentText("Gagal memuat detail: " + e.getMessage());
                 alert.show();
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Pilih keluhan terlebih dahulu!");
             alert.show();
         }
@@ -335,6 +364,7 @@ public class MahasiswaController {
             com.mankelfas.util.Navigator.navigate(root);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Gagal memuat fasilitas view: " + e.getMessage());
             alert.show();
         }
@@ -356,5 +386,19 @@ public class MahasiswaController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private <T> void setupComboBox(javafx.scene.control.ComboBox<T> comboBox) {
+        comboBox.setButtonCell(new javafx.scene.control.ListCell<T>() {
+            @Override
+            protected void updateItem(T item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(comboBox.getPromptText());
+                } else {
+                    setText(item.toString());
+                }
+            }
+        });
     }
 }

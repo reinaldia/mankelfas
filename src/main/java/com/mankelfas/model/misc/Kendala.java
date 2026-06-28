@@ -1,17 +1,14 @@
 package com.mankelfas.model.misc;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-
 /**
  * Merepresentasikan rintangan atau kesulitan yang dihadapi teknisi saat proses perbaikan.
  * Mencatat keterangan masalah agar pihak terkait dapat segera mengetahui hambatannya.
  */
 public class Kendala {
-    private SimpleIntegerProperty idKeluhan;
-    private SimpleStringProperty namaTeknisi;
-    private SimpleStringProperty alasan;
-    private SimpleStringProperty waktuDilaporkan;
+    private int idKeluhan;
+    private String namaTeknisi;
+    private String alasan;
+    private String waktuDilaporkan;
 
     /**
      * Mencatat rincian masalah baru yang menghalangi perbaikan keluhan.
@@ -22,14 +19,14 @@ public class Kendala {
      * @param waktuDilaporkan Stempel waktu saat teknisi mencatat kendala tersebut
      */
     public Kendala(int idKeluhan, String namaTeknisi, String alasan, String waktuDilaporkan) {
-        this.idKeluhan = new SimpleIntegerProperty(idKeluhan);
-        this.namaTeknisi = new SimpleStringProperty(namaTeknisi);
-        this.alasan = new SimpleStringProperty(alasan);
-        this.waktuDilaporkan = new SimpleStringProperty(waktuDilaporkan);
+        this.idKeluhan = idKeluhan;
+        this.namaTeknisi = namaTeknisi;
+        this.alasan = alasan;
+        this.waktuDilaporkan = waktuDilaporkan;
     }
 
-    public int getIdKeluhan() { return idKeluhan.get(); }
-    public String getNamaTeknisi() { return namaTeknisi.get(); }
-    public String getAlasan() { return alasan.get(); }
-    public String getWaktuDilaporkan() { return waktuDilaporkan.get(); }
+    public int getIdKeluhan() { return idKeluhan; }
+    public String getNamaTeknisi() { return namaTeknisi; }
+    public String getAlasan() { return alasan; }
+    public String getWaktuDilaporkan() { return waktuDilaporkan; }
 }

@@ -9,21 +9,29 @@
     -fx-text-fill: #333333;
 }
 
-/* Sidebar */
+/* Sidebar & Navbar */
 .sidebar {
-    -fx-background-color: #FFFFFF;
-    -fx-border-width: 0 1 0 0;
-    -fx-border-color: #E0E0E0;
+    -fx-background-color: linear-gradient(to bottom right, #8b0000, #d32f2f, #f44336);
+    -fx-border-width: 0;
+}
+
+.navbar {
+    -fx-background-color: linear-gradient(to right, #8b0000, #f44336);
 }
 
 /* Sidebar Buttons */
+.sidebar .subtitle-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: rgba(255,255,255,0.9) !important;
+}
+
 .sidebar .button {
     -fx-background-color: transparent;
-    -fx-text-fill: #555555;
+    -fx-text-fill: rgba(255,255,255,0.8);
 }
 .sidebar .button:hover {
-    -fx-background-color: #E9ECEF;
-    -fx-text-fill: #000000;
+    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-text-fill: #FFFFFF;
 }
 
 /* Content Area */
@@ -38,7 +46,7 @@
     -fx-text-fill: #333333;
 }
 .text-field:focused, .password-field:focused, .text-area:focused {
-    -fx-border-color: #007BFF;
+    -fx-border-color: #d32f2f;
 }
 
 /* Theme Toggle Button */
@@ -52,11 +60,11 @@
 
 /* Action Buttons */
 .btn-primary {
-    -fx-background-color: #B71C1C;
+    -fx-background-color: #d32f2f;
     -fx-text-fill: white;
 }
 .btn-primary:hover {
-    -fx-background-color: #8E0000;
+    -fx-background-color: #8b0000;
 }
 
 .btn-secondary {
@@ -100,6 +108,16 @@
 .table-view .column-header {
     -fx-background-color: transparent;
 }
+.table-view .combo-box .list-cell, .combo-box .text { -fx-text-fill: #333333 !important; }
+
+/* Scrollbar Thumb */
+.scroll-bar .thumb {
+    -fx-background-color: rgba(0,0,0,0.25);
+    -fx-background-radius: 4px;
+}
+.scroll-bar .thumb:hover {
+    -fx-background-color: rgba(0,0,0,0.45);
+}
 .table-view .table-cell {
     -fx-text-fill: #333333;
 }
@@ -110,8 +128,26 @@
     -fx-background-color: #FFFFFF;
 }
 .table-row-cell:selected {
-    -fx-background-color: #0d6efd;
+    -fx-background-color: #d32f2f;
 }
 .table-row-cell:selected .table-cell {
     -fx-text-fill: #FFFFFF;
+}
+
+/* Custom Dialog Styling */
+.custom-dialog {
+    -fx-background-color: #FFFFFF;
+}
+.custom-dialog > *.button-bar > *.container {
+    -fx-background-color: #FFFFFF;
+}
+.custom-dialog > *.label.content {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+.custom-dialog > *.header-panel {
+    -fx-background-color: linear-gradient(to bottom right, #8b0000, #d32f2f, #f44336);
+}
+.custom-dialog > *.header-panel *.label {
+    -fx-text-fill: white;
 }

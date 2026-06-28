@@ -83,6 +83,7 @@ public class AkunController {
         } catch (Exception e) {
             // Menampilkan informasi peringatan apabila operasi baca data gagal
             Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Gagal memuat data akun: " + e.getMessage());
             alert.show();
         }
@@ -109,6 +110,7 @@ public class AkunController {
             bukaForm(selectedUser);
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Pilih akun yang ingin diedit terlebih dahulu!");
             alert.show();
         }
@@ -140,9 +142,11 @@ public class AkunController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle(user == null ? "Tambah Akun" : "Edit Akun");
             stage.setScene(new Scene(root));
+            com.mankelfas.util.ThemeManager.applyTheme(stage.getScene());
             stage.showAndWait();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Gagal memuat form akun: " + e.getMessage());
             alert.show();
         }
@@ -159,10 +163,13 @@ public class AkunController {
         if (selectedUser != null) {
             // Meminta validasi tambahan untuk mencegah penghapusan yang tak disengaja
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Konfirmasi Hapus");
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
+            alert.setTitle("Hapus Akun");
             alert.setHeaderText("Hapus Akun?");
+            alert.setGraphic(null);
             alert.setContentText("Apakah Anda yakin ingin menghapus akun: " + selectedUser.getNama() + "?");
 
+            com.mankelfas.util.ThemeManager.applyTheme(alert.getDialogPane());
             Optional<ButtonType> result = alert.showAndWait();
             
             // Mengeksekusi penghapusan jika persetujuan berhasil didapatkan
@@ -172,6 +179,7 @@ public class AkunController {
                     refreshData();
                 } catch (Exception e) {
                     Alert err = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(err);
                     err.setContentText("Gagal menghapus akun: " + e.getMessage());
                     err.show();
                 }
@@ -179,6 +187,7 @@ public class AkunController {
         } else {
             // Mengingatkan prasyarat seleksi ke pengguna
             Alert alert = new Alert(Alert.AlertType.WARNING);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Pilih akun yang ingin dihapus terlebih dahulu!");
             alert.show();
         }

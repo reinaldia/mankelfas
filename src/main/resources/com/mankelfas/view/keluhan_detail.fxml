@@ -23,7 +23,7 @@
        <Label fx:id="lblStatus" text="Status: " />
        <Label fx:id="lblWaktuDiproses" text="Mulai Diproses: " />
        <Label fx:id="lblEstimasi" text="Estimasi Waktu: " />
-       <Label fx:id="lblDeskripsi" text="Deskripsi: " wrapText="true"/>
+       <Label fx:id="lblDeskripsi" text="Deskripsi: " wrapText="true" maxWidth="400" minHeight="-Infinity"/>
    </VBox>
 
    <VBox spacing="10.0" style="-fx-border-color: #ccc; -fx-border-width: 1; -fx-padding: 10;" GridPane.columnIndex="0" GridPane.rowIndex="1">
@@ -50,7 +50,7 @@
        <Label text="Riwayat Keluhan">
           <font><Font name="System Bold" size="14.0"/></font>
        </Label>
-       <TextArea fx:id="txtAreaRiwayatStatus" editable="false" prefHeight="100" />
+       <TextArea fx:id="txtAreaRiwayatStatus" editable="false" prefHeight="200" VBox.vgrow="ALWAYS" wrapText="true" />
    </VBox>
 
    <VBox spacing="10.0" style="-fx-border-color: #ccc; -fx-border-width: 1; -fx-padding: 10;" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.vgrow="ALWAYS">

@@ -59,7 +59,7 @@
                         <ComboBox fx:id="comboKondisi" promptText="Kondisi Saat Ini..." maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="combo-box"/>
                         <Button text="✕" onAction="#clearKondisi" styleClass="btn, btn-danger"/>
                     </HBox>
-                    <TextArea fx:id="inputDeskripsi" promptText="Deskripsi Keluhan" prefRowCount="4" wrapText="true" styleClass="text-area"/>
+                    <TextArea fx:id="inputDeskripsi" promptText="Deskripsi Keluhan (minimal 10 karakter)" prefRowCount="4" wrapText="true" styleClass="text-area"/>
                     <Button text="Pilih Foto Keluhan" onAction="#pilihFoto" styleClass="btn, btn-secondary"/>
                     <javafx.scene.layout.StackPane maxWidth="150" prefHeight="150" style="-fx-border-color: #cccccc; -fx-border-style: dashed; -fx-border-width: 2; -fx-background-color: #f9f9f9; -fx-border-radius: 5; -fx-background-radius: 5;">
                         <Label fx:id="lblPlaceholder" text="Belum ada foto" style="-fx-text-fill: #999999;"/>

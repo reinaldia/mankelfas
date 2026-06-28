@@ -20,6 +20,14 @@ public class LoginController {
     @FXML
     private PasswordField inputPassword;
 
+    @FXML
+    private TextField inputPasswordVisible;
+
+    @FXML
+    private javafx.scene.control.Button btnTogglePassword;
+
+    private boolean isPasswordVisible = false;
+
     private final IUserService userService;
 
     /**
@@ -28,6 +36,26 @@ public class LoginController {
     public LoginController() {
         // Mengikat pengontrol ini dengan instansi tunggal layanan akun
         this.userService = UserService.getInstance();
+    }
+
+    @FXML
+    public void initialize() {
+        // Bind the text properties so they stay in sync
+        inputPasswordVisible.textProperty().bindBidirectional(inputPassword.textProperty());
+    }
+
+    @FXML
+    private void togglePasswordVisibility() {
+        isPasswordVisible = !isPasswordVisible;
+        if (isPasswordVisible) {
+            inputPasswordVisible.setVisible(true);
+            inputPassword.setVisible(false);
+            btnTogglePassword.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-text-fill: #d32f2f;"); // Change color when active
+        } else {
+            inputPasswordVisible.setVisible(false);
+            inputPassword.setVisible(true);
+            btnTogglePassword.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-text-fill: #888888;");
+        }
     }
 
     /**
@@ -85,9 +113,12 @@ public class LoginController {
         try {
             // Mengonfigurasi dan memunculkan pop-up pemberitahuan
             Alert alert = new Alert(type);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setTitle(title);
             alert.setHeaderText(null);
+            alert.setGraphic(null);
             alert.setContentText(message);
+            com.mankelfas.util.ThemeManager.applyTheme(alert.getDialogPane());
             alert.showAndWait();
         } catch (Exception e) {
             // Mencatat diam-diam apabila pop-up gagal ditampilkan

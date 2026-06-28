@@ -36,9 +36,8 @@
       </VBox>
 
       <HBox spacing="10" alignment="CENTER">
-          <Button text="Edit Profil" onAction="#editProfil" styleClass="btn, btn-primary" />
+          <Button text="Edit Profil" onAction="#editProfil" styleClass="btn" style="-fx-background-color: #007BFF; -fx-text-fill: white;" />
           <Button text="Hapus Akun" onAction="#hapusAkun" styleClass="btn, btn-danger" />
-          <Button text="Tutup" onAction="#tutupProfil" styleClass="btn, btn-secondary" />
       </HBox>
    </children>
    <padding>

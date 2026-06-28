@@ -54,4 +54,26 @@ public class ThemeManager {
             scene.getStylesheets().add(lightCss);
         }
     }
+
+    /**
+     * Menerapkan stylesheet pada sebuah kotak pesan dialog (Alert).
+     */
+    public static void applyTheme(javafx.scene.control.DialogPane dialogPane) {
+        if (dialogPane == null) return;
+        
+        dialogPane.getStylesheets().clear();
+        String commonCss = ThemeManager.class.getResource("/com/mankelfas/css/common.css").toExternalForm();
+        dialogPane.getStylesheets().add(commonCss);
+        
+        if (isDarkMode) {
+            String darkCss = ThemeManager.class.getResource("/com/mankelfas/css/dark-theme.css").toExternalForm();
+            dialogPane.getStylesheets().add(darkCss);
+        } else {
+            String lightCss = ThemeManager.class.getResource("/com/mankelfas/css/light-theme.css").toExternalForm();
+            dialogPane.getStylesheets().add(lightCss);
+        }
+        
+        // Tambahkan class CSS khusus untuk memicu custom styling di dialog
+        dialogPane.getStyleClass().add("custom-dialog");
+    }
 }

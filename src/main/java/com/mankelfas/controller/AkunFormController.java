@@ -121,7 +121,16 @@ public class AkunFormController {
         // Melakukan validasi dasar untuk mencegah penyimpanan data yang tidak lengkap
         if (nama.isEmpty() || email.isEmpty() || password.isEmpty() || role == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Mohon lengkapi semua field utama (Nama, Email, Password, Role)!");
+            alert.show();
+            return;
+        }
+        
+        if (password.length() < 6) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
+            alert.setContentText("Password harus memiliki minimal 6 karakter!");
             alert.show();
             return;
         }
@@ -142,6 +151,7 @@ public class AkunFormController {
                 // Mengeksekusi penambahan ke database dan memberikan tanggapan kepada pengguna
                 if (userService.addUser(newUser)) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
                     alert.setContentText("Berhasil menambahkan akun!");
                     alert.show();
                 }
@@ -162,6 +172,7 @@ public class AkunFormController {
                 // Mengeksekusi penyuntingan ke database
                 if (userService.updateUser(updatedUser)) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
                     alert.setContentText("Berhasil mengedit akun!");
                     alert.show();
                 }
@@ -176,6 +187,7 @@ public class AkunFormController {
         } catch (Exception e) {
             // Menampilkan laporan kegagalan operasional
             Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Gagal menyimpan data: " + e.getMessage());
             alert.show();
         }

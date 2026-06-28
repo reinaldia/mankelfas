@@ -2,6 +2,7 @@ package com.mankelfas.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import com.mankelfas.model.user.User;
 import com.mankelfas.model.user.Admin;
@@ -96,11 +97,21 @@ public class ProfilController {
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == simpanButtonType) {
-                return new String[]{namaField.getText(), emailField.getText(), passwordField.getText()};
+                String newPassword = passwordField.getText();
+                if (newPassword != null && !newPassword.isEmpty() && newPassword.length() < 6) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    com.mankelfas.util.DialogHelper.styleAlert(alert);
+                    alert.setContentText("Password baru harus memiliki minimal 6 karakter!");
+                    alert.show();
+                    return null; // Membatalkan proses update
+                }
+                
+                return new String[]{namaField.getText(), emailField.getText(), newPassword};
             }
             return null;
         });
 
+        com.mankelfas.util.ThemeManager.applyTheme(dialog.getDialogPane());
         java.util.Optional<String[]> result = dialog.showAndWait();
         result.ifPresent(data -> {
             try {
@@ -125,8 +136,10 @@ public class ProfilController {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
         alert.setTitle("Hapus Akun");
         alert.setHeaderText("Konfirmasi Penghapusan Akun");
-        alert.setContentText("Apakah Anda yakin ingin menghapus akun Anda secara permanen? Aksi ini tidak dapat dibatalkan.");
+        alert.setGraphic(null);
+        alert.setContentText("Anda yakin ingin keluar dari sistem?");
 
+        com.mankelfas.util.ThemeManager.applyTheme(alert.getDialogPane());
         java.util.Optional<javafx.scene.control.ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
             try {

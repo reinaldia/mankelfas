@@ -18,6 +18,7 @@ public class DialogHelper {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(header);
+        alert.setGraphic(null);
 
         TextArea textArea = new TextArea(content);
         textArea.setEditable(false);
@@ -33,6 +34,7 @@ public class DialogHelper {
         expContent.add(textArea, 0, 0);
 
         alert.getDialogPane().setContent(expContent);
+        ThemeManager.applyTheme(alert.getDialogPane());
         alert.showAndWait();
     }
 
@@ -42,11 +44,57 @@ public class DialogHelper {
      * @param title Judul utama pada jendela pesan
      * @param content Penjelasan pesan kesalahan
      */
+    public static void showInfoDialog(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setGraphic(null);
+        alert.setContentText(content);
+        ThemeManager.applyTheme(alert.getDialogPane());
+        alert.showAndWait();
+    }
+
+    /**
+     * Menampilkan kotak pesan kesalahan (Error).
+     * 
+     * @param title Judul utama pada jendela pesan
+     * @param content Penjelasan rinci mengenai kesalahan yang terjadi
+     */
     public static void showErrorDialog(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
+        alert.setGraphic(null);
         alert.setContentText(content);
+        ThemeManager.applyTheme(alert.getDialogPane());
         alert.showAndWait();
+    }
+
+    /**
+     * Menampilkan kotak pesan peringatan (Warning).
+     * 
+     * @param title Judul utama pada jendela pesan
+     * @param content Penjelasan rinci mengenai peringatan tersebut
+     */
+    public static void showWarningDialog(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setGraphic(null);
+        alert.setContentText(content);
+        ThemeManager.applyTheme(alert.getDialogPane());
+        alert.showAndWait();
+    }
+
+    /**
+     * Menerapkan gaya tema visual kustom (ThemeManager) pada sebuah instans Alert bawaan.
+     * Fungsi ini akan menghapus ikon dan header bawaan agar konsisten dengan desain aplikasi.
+     * 
+     * @param alert Objek Alert yang ingin diformat gayanya
+     */
+    public static void styleAlert(Alert alert) {
+        alert.setHeaderText(null);
+        alert.setGraphic(null);
+        ThemeManager.applyTheme(alert.getDialogPane());
     }
 }

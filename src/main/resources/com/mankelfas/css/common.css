@@ -66,6 +66,22 @@
     -fx-background-radius: 8px 8px 0 0;
 }
 
+/* Custom ListView Styling (Riwayat dll) */
+.list-view .list-cell {
+    -fx-font-size: 11px;
+    -fx-padding: 3px 5px;
+}
+.list-view .scroll-bar:vertical {
+    -fx-pref-width: 0;
+    -fx-max-width: 0;
+    -fx-opacity: 0;
+}
+.list-view .scroll-bar:horizontal {
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+    -fx-opacity: 0;
+}
+
 /* Profile specific styles */
 .profile-picture {
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 15, 0, 0, 5);
@@ -75,7 +91,6 @@
 .btn-danger {
     -fx-background-color: #E53935 !important;
     -fx-text-fill: white !important;
-    -fx-background-radius: 20px !important;
     -fx-font-weight: bold;
 }
 
@@ -141,14 +156,13 @@
 }
 
 .sidebar {
-    -fx-background-radius: 0 15px 15px 0;
-    -fx-border-radius: 0 15px 15px 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
 }
 
 .navbar {
-    -fx-background-radius: 0 0 15px 15px;
-    -fx-border-radius: 0 0 15px 15px;
-    -fx-background-color: rgba(183, 28, 28, 0.8); /* Translucent Red */
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
 }
 
 /* Make table transparent to fit glass theme */
@@ -180,3 +194,30 @@
 .stat-blue { -fx-background-color: linear-gradient(to bottom right, #4A90E2, #357ABD); }
 .stat-green { -fx-background-color: linear-gradient(to bottom right, #2ECC71, #27AE60); }
 .stat-red { -fx-background-color: linear-gradient(to bottom right, #E74C3C, #C0392B); }
+
+/* Minimalist ScrollBar */
+.scroll-bar:vertical {
+    -fx-pref-width: 8px;
+    -fx-background-color: transparent;
+}
+.scroll-bar:horizontal {
+    -fx-pref-height: 8px;
+    -fx-background-color: transparent;
+}
+.scroll-bar .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 4px;
+}
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-opacity: 0;
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+    -fx-padding: 0;
+}
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0;
+}

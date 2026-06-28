@@ -140,6 +140,7 @@ public class AdminController {
         } catch (Exception e) {
             // Menampilkan peringatan apabila terjadi kesalahan saat memuat data awal
             Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Gagal memuat dashboard admin: " + e.getMessage());
             alert.show();
         }
@@ -181,17 +182,20 @@ public class AdminController {
                 
                 // Memberikan informasi keberhasilan kepada pengguna
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
                 alert.setContentText(isReplacement ? "Teknisi berhasil diganti!" : "Teknisi berhasil di-assign!");
                 alert.show();
             } catch (Exception e) {
                 // Menangani kegagalan saat proses penyimpanan
                 Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
                 alert.setContentText("Gagal assign teknisi: " + e.getMessage());
                 alert.show();
             }
         } else {
             // Memperingatkan pengguna apabila ada pilihan yang belum lengkap
             Alert alert = new Alert(Alert.AlertType.WARNING);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Pilih keluhan dan teknisi terlebih dahulu!");
             alert.show();
         }
@@ -262,11 +266,13 @@ public class AdminController {
                 com.mankelfas.util.DialogHelper.showInfoDialog("Sukses", "Pulihkan Arsip", "Keluhan telah dikembalikan dari arsip.");
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
                 alert.setContentText("Gagal memulihkan arsip: " + e.getMessage());
                 alert.show();
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Pilih keluhan terlebih dahulu!");
             alert.show();
         }
@@ -293,12 +299,14 @@ public class AdminController {
             } catch (Exception e) {
                 // Menangani kemungkinan kesalahan komunikasi dengan database
                 Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
                 alert.setContentText("Gagal mengarsipkan: " + e.getMessage());
                 alert.show();
             }
         } else {
             // Memperingatkan pengguna apabila tidak ada keluhan yang dipilih
             Alert alert = new Alert(Alert.AlertType.WARNING);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Pilih keluhan terlebih dahulu!");
             alert.show();
         }
@@ -328,12 +336,14 @@ public class AdminController {
             } catch (Exception e) {
                 // Memberikan pesan peringatan apabila operasi penyimpanan gagal
                 Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
                 alert.setContentText("Gagal set prioritas: " + e.getMessage());
                 alert.show();
             }
         } else {
             // Mengingatkan pengguna jika isian belum lengkap
             Alert alert = new Alert(Alert.AlertType.WARNING);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Pilih keluhan dan prioritas terlebih dahulu!");
             alert.show();
         }
@@ -360,16 +370,19 @@ public class AdminController {
                 
                 // Menampilkan notifikasi sukses kepada Admin
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
                 alert.setContentText("Keluhan telah ditolak.");
                 alert.show();
             } catch (Exception e) {
                 // Menampilkan notifikasi kegagalan apabila terjadi rintangan teknis
                 Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
                 alert.setContentText("Gagal menolak keluhan: " + e.getMessage());
                 alert.show();
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Pilih keluhan terlebih dahulu!");
             alert.show();
         }
@@ -398,15 +411,18 @@ public class AdminController {
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.setTitle("Detail Keluhan");
                 stage.setScene(new Scene(root));
+                com.mankelfas.util.ThemeManager.applyTheme(stage.getScene());
                 stage.showAndWait();
             } catch (Exception e) {
                 // Menampilkan pesan kesalahan jika gagal memuat UI rincian
                 Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
                 alert.setContentText("Gagal memuat detail: " + e.getMessage());
                 alert.show();
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Pilih keluhan terlebih dahulu!");
             alert.show();
         }
@@ -462,6 +478,7 @@ public class AdminController {
             com.mankelfas.util.Navigator.navigate(root);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Gagal membuka window fasilitas: " + e.getMessage());
             alert.show();
         }
@@ -479,6 +496,7 @@ public class AdminController {
             com.mankelfas.util.Navigator.navigate(root);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Gagal membuka daftar akun: " + e.getMessage());
             alert.show();
         }

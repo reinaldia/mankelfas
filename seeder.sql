@@ -2,13 +2,13 @@ USE db_mankelfas;
 
 -- Seeder for users
 INSERT INTO users (nama, email, password, role, nim, level, keahlian) VALUES 
-('Admin Utama', 'admin@mankelfas.com', 'admin', 'Admin', NULL, 'Super Admin', NULL),
-('Budi Teknisi', 'budi@tek.com', '123', 'Teknisi', NULL, NULL, 'Elektronik'),
-('Andi Tukang', 'andi@tek.com', '123', 'Teknisi', NULL, NULL, 'Furnitur'),
-('Admin Junior', 'junior@mankelfas.com', '123', 'Admin', NULL, 'Moderator', NULL),
-('Akmal', 'akmal@mhs.com', '123', 'Mahasiswa', 'NIM111', NULL, NULL),
-('Budi', 'budi@mhs.com', '123', 'Mahasiswa', 'NIM222', NULL, NULL),
-('Mahasiswa 1', 'mhs@mankelfas.com', 'mhs', 'Mahasiswa', 'NIM12345', NULL, NULL);
+('Admin Utama', 'admin@mankelfas.com', 'admin123', 'Admin', NULL, 'Super Admin', NULL),
+('Budi Teknisi', 'budi@tek.com', 'pass123', 'Teknisi', NULL, NULL, 'Elektronik'),
+('Andi Tukang', 'andi@tek.com', 'pass123', 'Teknisi', NULL, NULL, 'Furnitur'),
+('Admin Junior', 'junior@mankelfas.com', 'admin123', 'Admin', NULL, 'Moderator', NULL),
+('Akmal', 'akmal@mhs.com', 'pass123', 'Mahasiswa', 'NIM111', NULL, NULL),
+('Budi', 'budi@mhs.com', 'pass123', 'Mahasiswa', 'NIM222', NULL, NULL),
+('Mahasiswa 1', 'mhs@mankelfas.com', 'mhs123', 'Mahasiswa', 'NIM12345', NULL, NULL);
 
 -- Seeder for fasilitas
 INSERT INTO fasilitas (nama, kategori, lokasi, kondisi) VALUES

@@ -59,6 +59,7 @@ public class TambahFasilitasController {
         if (nama == null || nama.trim().isEmpty() ||
             kategori == null || lokasi == null || lokasi.trim().isEmpty() || kondisi == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
             alert.setContentText("Mohon lengkapi semua field data fasilitas!");
             alert.show();
             return;
@@ -78,8 +79,12 @@ public class TambahFasilitasController {
         }
 
         // Memberikan tanda bahwa tugas telah selesai dengan sukses
+        String message = "Fasilitas baru berhasil ditambahkan!";
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText("Fasilitas baru berhasil ditambahkan!");
+            com.mankelfas.util.DialogHelper.styleAlert(alert);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        com.mankelfas.util.ThemeManager.applyTheme(alert.getDialogPane());
         alert.showAndWait();
 
         // Mengakhiri proses dan menutup jendela pop-up
