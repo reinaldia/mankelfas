@@ -41,9 +41,9 @@
    </TableView>
 
    <HBox spacing="10.0">
-       <Button text="Tambah Fasilitas" onAction="#bukaFormTambah" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
-       <Button text="Edit Fasilitas" onAction="#editFasilitas" style="-fx-background-color: #FFC107; -fx-text-fill: white;" />
-       <Button text="Hapus Fasilitas" onAction="#hapusFasilitas" style="-fx-background-color: #F44336; -fx-text-fill: white;" />
+       <Button fx:id="btnTambah" text="Tambah Fasilitas" onAction="#bukaFormTambah" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
+       <Button fx:id="btnEdit" text="Edit Fasilitas" onAction="#editFasilitas" style="-fx-background-color: #FFC107; -fx-text-fill: white;" />
+       <Button fx:id="btnHapus" text="Hapus Fasilitas" onAction="#hapusFasilitas" style="-fx-background-color: #F44336; -fx-text-fill: white;" />
        <Button text="Lihat Info" onAction="#lihatInfoPopup" style="-fx-background-color: #2196F3; -fx-text-fill: white;" />
    </HBox>
 </VBox>

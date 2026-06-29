@@ -39,6 +39,10 @@ public class FasilitasController {
     @FXML private TableColumn<Fasilitas, String> colKategori;
     @FXML private TableColumn<Fasilitas, String> colLokasi;
     @FXML private TableColumn<Fasilitas, String> colKondisi;
+    
+    @FXML private javafx.scene.control.Button btnTambah;
+    @FXML private javafx.scene.control.Button btnEdit;
+    @FXML private javafx.scene.control.Button btnHapus;
 
     private ObservableList<Fasilitas> fasilitasList;
 
@@ -83,6 +87,23 @@ public class FasilitasController {
         sortedData.comparatorProperty().bind(tabelFasilitas.comparatorProperty());
 
         tabelFasilitas.setItems(sortedData);
+
+        // Menyembunyikan tombol aksi jika pengguna adalah Mahasiswa
+        com.mankelfas.model.user.User currentUser = com.mankelfas.util.Session.getCurrentUser();
+        if (currentUser instanceof com.mankelfas.model.user.Mahasiswa) {
+            if (btnTambah != null) {
+                btnTambah.setVisible(false);
+                btnTambah.setManaged(false);
+            }
+            if (btnEdit != null) {
+                btnEdit.setVisible(false);
+                btnEdit.setManaged(false);
+            }
+            if (btnHapus != null) {
+                btnHapus.setVisible(false);
+                btnHapus.setManaged(false);
+            }
+        }
     }
 
     /**
