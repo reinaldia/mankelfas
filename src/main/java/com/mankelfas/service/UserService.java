@@ -77,7 +77,7 @@ public class UserService implements IUserService {
     }
 
     /**
-     * Menyesuaikan detail profil pengguna yang telah ada dengan informasi mutakhir.
+     * Menyesuaikan detail profil pengguna yang telah ada dengan informasi terbaru.
      * 
      * @param user Pengguna beserta detail perubahannya
      * @return Status keberhasilan modifikasi

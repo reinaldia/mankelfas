@@ -309,6 +309,23 @@ public class TeknisiController {
             return;
         }
 
+        if (selected.getTargetSelesai() != null && java.time.LocalDateTime.now().isAfter(selected.getTargetSelesai())) {
+            javafx.scene.control.TextInputDialog dialogAlasan = new javafx.scene.control.TextInputDialog();
+            com.mankelfas.util.ThemeManager.applyTheme(dialogAlasan.getDialogPane());
+            dialogAlasan.setTitle("Keterlambatan Penyelesaian");
+            dialogAlasan.setHeaderText("Waktu penyelesaian telah melebihi estimasi (" + selected.getEstimasiWaktu() + ").");
+            dialogAlasan.setContentText("Silakan masukkan alasan kendala:");
+
+            java.util.Optional<String> alasanResult = dialogAlasan.showAndWait();
+            if (!alasanResult.isPresent() || alasanResult.get().trim().isEmpty()) {
+                com.mankelfas.util.DialogHelper.showErrorDialog("Peringatan", "Alasan kendala wajib diisi karena melebihi estimasi waktu.");
+                return;
+            }
+            
+            com.mankelfas.repository.KendalaRepository kendalaRepo = new com.mankelfas.repository.KendalaRepository();
+            kendalaRepo.tambahKendala(selected.getIdKeluhan(), com.mankelfas.util.Session.getCurrentUser().getIdUser(), alasanResult.get().trim());
+        }
+
         javafx.scene.control.Dialog<Void> dialog = new javafx.scene.control.Dialog<>();
         dialog.setTitle("Selesaikan Keluhan");
         dialog.setHeaderText("Laporan Penyelesaian Perbaikan");

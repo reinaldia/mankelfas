@@ -119,7 +119,7 @@ public class UserRepository implements IUserRepository {
     /**
      * Melakukan pembaruan terhadap detail profil atau hak akses pengguna yang sudah ada.
      * 
-     * @param user Data pengguna dengan perubahan mutakhir
+     * @param user Data pengguna dengan perubahan terbaru
      * @return Tanda keberhasilan pembaruan informasi
      */
     @Override

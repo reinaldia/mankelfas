@@ -70,7 +70,7 @@ public class KendalaController {
                 ));
             }
             
-            // Mengganti isi tabel saat ini dengan data paling mutakhir dari database
+            // Mengganti isi tabel saat ini dengan data paling baru dari database
             tabelKendala.setItems(list);
             
         } catch (Exception e) {

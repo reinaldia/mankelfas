@@ -22,7 +22,7 @@ public interface IFasilitasRepository {
     /**
      * Memperbarui detail keterangan pada suatu fasilitas di database.
      * 
-     * @param fasilitas Entitas fasilitas dengan data termutakhir
+     * @param fasilitas Entitas fasilitas dengan data terbaru
      * @return Status keberhasilan operasi pembaruan
      */
     boolean updateFasilitas(Fasilitas fasilitas);

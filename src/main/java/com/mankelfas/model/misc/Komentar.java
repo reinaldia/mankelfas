@@ -11,7 +11,6 @@ public class Komentar {
     private String isiKomentar;
     private Date tanggal;
     private User pengirim;
-
     private String fotoBukti;
 
     /**
